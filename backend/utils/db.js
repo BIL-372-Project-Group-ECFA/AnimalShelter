@@ -24,10 +24,10 @@ async function initializeDatabase() {
         initModels(sequelize);
     
         await sequelize.sync();
-        console.log('Tablolar başarıyla senkronize edildi!');
+        console.log('Tables have been synchronized successfully!');
     
     } catch (error) {
-        console.error('Veritabanı başlatma sırasında hata oluştu:', error);
+        console.error('Failed during initializing the database:', error);
         throw error;
     }
 };

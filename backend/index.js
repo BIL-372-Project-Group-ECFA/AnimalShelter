@@ -1,5 +1,11 @@
 require('dotenv').config();
 
-const { initializeDatabase } = require('./utils/initializeDatabase');
+const startServer = require('./server');
+const { initializeDatabase } = require('./utils/db');
+const startNgrok = require('./utils/startNgrok');
 
-initializeDatabase();
+(async () => {
+    initializeDatabase();
+    startServer();
+    startNgrok();
+})();
