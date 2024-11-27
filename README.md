@@ -6,6 +6,13 @@
 5. Açılan terminalde `<authtoken>` kısmına kendi Authtoken'ınızı yapıştırmak suretiyle
     "ngrok config add-authtoken `<authtoken>`" komutunu çalıştırın.
 
-Uygulamayı başlatmak için:
+Aşağıdaki adımları sırayla uygulayın:
+
+Backend Uygulamasını başlatmak için:
 1. Projeyi klonladıktan sonra "npm install" komutu ile bağımlılıkları yükleyin.
 2. "npm run dev" komutu ile uygulamayı başlatın.
+
+Frontend Uygulamasını başlatmak için:
+1. "cd frontend" komutu ile frontend klasörüne geçin.
+2. "npm install" komutu ile gerekli bağımlılıkları yükleyin.
+3. "npm start" komutu ile uygulamayı başlatın.
