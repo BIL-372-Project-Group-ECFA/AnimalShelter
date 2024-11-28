@@ -1,6 +1,6 @@
 const { adoption_history } = require('../models/init-models')(require('../utils/db').sequelize);
 
-// Yeni bir evlat edinme tarihi ekle
+
 const createAdoptionHistory = async (req, res) => {
   try {
     const { shelter_id, adopter_id, animal_id, adoption_date } = req.body;
