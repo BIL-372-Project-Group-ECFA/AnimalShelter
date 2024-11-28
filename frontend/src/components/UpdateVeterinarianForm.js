@@ -11,9 +11,7 @@ const UpdateVeterinarianForm = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const updatedData = { contact_number: contactNumber, 
-      license_number: licenseNumber, 
-      specialization  };
+    const updatedData = { contactNumber, licenseNumber, specialization };
     try {
       await updateVeterinarian(veterinarianId, updatedData);
       alert("Veterinarian updated successfully!");

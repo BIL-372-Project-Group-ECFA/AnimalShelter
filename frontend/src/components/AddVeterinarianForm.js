@@ -3,6 +3,7 @@ import { addVeterinarian } from '../api/veterinarians';
 import '../styles/AddVeterinarianForm.css'; // CSS dosyasını import et
 
 const AddVeterinarianForm = () => {
+  const [name, setName] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [licenseNumber, setLicenseNumber] = useState('');
   const [specialization, setSpecialization] = useState('');
@@ -11,21 +12,16 @@ const AddVeterinarianForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Map frontend keys to backend keys
-      const veterinarianData = { 
-        contact_number: contactNumber, 
-        license_number: licenseNumber, 
-        specialization 
-      };
+      const veterinarianData = { name, contactNumber, licenseNumber, specialization };
       await addVeterinarian(veterinarianData);
       alert('Veterinarian added successfully!');
       // Reset form
+      setName('');
       setContactNumber('');
       setLicenseNumber('');
       setSpecialization('');
     } catch (err) {
       alert("Failed to add veterinarian: " + err.response?.data?.message || err.message);
-      setError(err.message);
     }
   };
 
@@ -33,6 +29,15 @@ const AddVeterinarianForm = () => {
     <div>
       <h2>Add Veterinarian</h2>
       <form onSubmit={handleSubmit}>
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
         <div>
           <label>Contact Number:</label>
           <input
