@@ -1,0 +1,5 @@
+shelter ok create delete update
+animal ok create delete update
+user ok create delete update
+vaccine ok create delete update
+veterinarian sadece delete çalışıyor

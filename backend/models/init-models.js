@@ -7,7 +7,7 @@ var _donations = require("./donations");
 var _medical_records = require("./medical_records");
 var _shelter_history = require("./shelter_history");
 var _shelters = require("./shelters");
-var _user = require("./user");
+var _users = require("./users");
 var _vaccination_details = require("./vaccination_details");
 var _vaccines = require("./vaccines");
 var _veterinarians = require("./veterinarians");
@@ -21,7 +21,7 @@ function initModels(sequelize) {
   var medical_records = _medical_records(sequelize, DataTypes);
   var shelter_history = _shelter_history(sequelize, DataTypes);
   var shelters = _shelters(sequelize, DataTypes);
-  var user = _user(sequelize, DataTypes);
+  var users = _users(sequelize, DataTypes);
   var vaccination_details = _vaccination_details(sequelize, DataTypes);
   var vaccines = _vaccines(sequelize, DataTypes);
   var veterinarians = _veterinarians(sequelize, DataTypes);
@@ -48,10 +48,10 @@ function initModels(sequelize) {
   shelters.hasMany(donations, { as: "donations", foreignKey: "shelter_id"});
   shelter_history.belongsTo(shelters, { as: "shelter", foreignKey: "shelter_id"});
   shelters.hasMany(shelter_history, { as: "shelter_histories", foreignKey: "shelter_id"});
-  adoption_history.belongsTo(user, { as: "adopter", foreignKey: "adopter_id"});
-  user.hasMany(adoption_history, { as: "adoption_histories", foreignKey: "adopter_id"});
-  donations.belongsTo(user, { as: "donor", foreignKey: "donor_id"});
-  user.hasMany(donations, { as: "donations", foreignKey: "donor_id"});
+  adoption_history.belongsTo(users, { as: "adopter", foreignKey: "adopter_id"});
+  users.hasMany(adoption_history, { as: "adoption_histories", foreignKey: "adopter_id"});
+  donations.belongsTo(users, { as: "donor", foreignKey: "donor_id"});
+  users.hasMany(donations, { as: "donations", foreignKey: "donor_id"});
   vaccination_details.belongsTo(vaccines, { as: "vaccination_type", foreignKey: "vaccination_type_id"});
   vaccines.hasMany(vaccination_details, { as: "vaccination_details", foreignKey: "vaccination_type_id"});
   medical_records.belongsTo(veterinarians, { as: "veterinarian", foreignKey: "veterinarian_id"});
@@ -66,7 +66,7 @@ function initModels(sequelize) {
     medical_records,
     shelter_history,
     shelters,
-    user,
+    users,
     vaccination_details,
     vaccines,
     veterinarians,
