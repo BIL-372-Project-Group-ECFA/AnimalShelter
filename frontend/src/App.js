@@ -5,9 +5,6 @@ import DeleteAnimalForm from './components/DeleteAnimalForm';
 import AddUserForm from './components/AddUserForm';
 import DeleteUserForm from './components/DeleteUserForm';
 import UpdateUserForm from './components/UpdateUserForm';
-import AddAdoptionHistoryForm from './components/AddAdoptionHistoryForm';
-import UpdateAdoptionHistoryForm from './components/UpdateAdoptionHistoryForm';
-import DeleteAdoptionHistoryForm from './components/DeleteAdoptionHistoryForm';
 import AddShelterForm from './components/AddShelterForm';
 import UpdateShelterForm from './components/UpdateShelterForm';
 import DeleteShelterForm from './components/DeleteShelterForm';
@@ -17,6 +14,13 @@ import DeleteVaccineForm from './components/DeleteVaccineForm';
 import AddVeterinarianForm from './components/AddVeterinarianForm';
 import UpdateVeterinarianForm from './components/UpdateVeterinarianForm';
 import DeleteVeterinarianForm from './components/DeleteVeterinarianForm';
+import AddVaccinationDetailForm from './components/AddVaccinationDetailForm';
+import DeleteVaccinationDetailForm from './components/DeleteVaccinationDetailForm';
+import UpdateVaccinationDetailForm from './components/UpdateVaccinationDetailForm';
+import AddAdoptionHistoryForm from './components/AddAdoptionHistoryForm';
+import DeleteAdoptionHistoryForm from './components/DeleteAdoptionHistoryForm';
+import UpdateAdoptionHistoryForm from './components/UpdateAdoptionHistoryForm';
+
 
 function App() {
     return (
@@ -27,9 +31,6 @@ function App() {
             <AddUserForm />
             <DeleteUserForm />
             <UpdateUserForm />
-            <AddAdoptionHistoryForm />
-            <UpdateAdoptionHistoryForm />
-            <DeleteAdoptionHistoryForm />
             <AddShelterForm />
             <UpdateShelterForm />
             <DeleteShelterForm />
@@ -39,6 +40,13 @@ function App() {
             <AddVeterinarianForm />
             <UpdateVeterinarianForm />
             <DeleteVeterinarianForm />
+            <AddVaccinationDetailForm />
+            <DeleteVaccinationDetailForm />
+            <UpdateVaccinationDetailForm />
+            <AddAdoptionHistoryForm />
+            <DeleteAdoptionHistoryForm />
+            <UpdateAdoptionHistoryForm />
+         
         </div>
     );
 }

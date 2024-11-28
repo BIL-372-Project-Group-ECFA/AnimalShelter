@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { deleteAdoptionHistory } from "../api/adoption_history";
-import "../styles/DeleteAdoptionHistoryForm.css"; // Import the corresponding CSS file
+import React, { useState } from 'react';
+import { deleteAdoptionHistory } from '../api/adoptionHistory';  // API'den import et
+import '../styles/DeleteAdoptionHistoryForm.css'; // CSS dosyasını import et
 
 const DeleteAdoptionHistoryForm = () => {
-  const [adoptionId, setAdoptionId] = useState("");
-  const [error, setError] = useState(null);
+  const [adoptionId, setAdoptionId] = useState('');  // Kullanıcıdan alınacak ID
+  const [error, setError] = useState(null);  // Hata durumunu tutacak state
 
   const handleDelete = async (e) => {
-    e.preventDefault();
+    e.preventDefault();  // Formun sayfayı yenilemesini engelle
     try {
-      await deleteAdoptionHistory(adoptionId); // Adoption history delete operation
-      alert("Adoption history deleted successfully!");
-      setAdoptionId(""); // Reset the form
+      await deleteAdoptionHistory(adoptionId);  // Aşılama geçmişi silme API çağrısı
+      alert('Adoption history deleted successfully!');  // Başarılı silme mesajı
+      setAdoptionId('');  // Formu sıfırla
     } catch (err) {
-      console.error("Failed to delete adoption history:", err);
-      setError("Failed to delete adoption history: " + err.message); // Display error message
+      console.error('Failed to delete adoption history:', err);
+      setError('Failed to delete adoption history: ' + err.message);  // Hata mesajını göster
     }
   };
 
@@ -25,14 +25,14 @@ const DeleteAdoptionHistoryForm = () => {
         <div>
           <label>Adoption ID:</label>
           <input
-            type="text"
+            type="number"
             value={adoptionId}
-            onChange={(e) => setAdoptionId(e.target.value)}
+            onChange={(e) => setAdoptionId(e.target.value)}  // ID değişimini takip et
             required
           />
         </div>
         <button type="submit">Delete Adoption History</button>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}  {/* Hata varsa mesajı göster */}
       </form>
     </div>
   );
