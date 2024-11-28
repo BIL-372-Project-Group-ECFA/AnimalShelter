@@ -6,6 +6,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
     dialect: 'mysql', 
     logging: false,
 });
+const models = initModels(sequelize);
 
 async function connectToTheDatabase() {
     try {
@@ -31,5 +32,4 @@ async function initializeDatabase() {
         throw error;
     }
 };
-
-module.exports = { initializeDatabase };
+module.exports = { initializeDatabase, models, sequelize};
