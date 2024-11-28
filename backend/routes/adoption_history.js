@@ -5,22 +5,22 @@ const {
   getAllAdoptionHistories,
   getAdoptionHistoryById,
   updateAdoptionHistory,
-  deleteAdoptionHistory,
-} = require('../controllers/adoptionHistoryController');
+  deleteAdoptionHistory
+} = require('../controllers/adoption_historyController');
 
-// Yeni bir evlat edinme tarihi ekle
+// Yeni bir adoption history kaydı ekle
 router.post('/', createAdoptionHistory);
 
-// Tüm evlat edinme tarihlerini listele
+// Tüm adoption history kayıtlarını listele
 router.get('/', getAllAdoptionHistories);
 
-// Tek bir evlat edinme tarihini getir
+// Tek bir adoption history kaydını getir
 router.get('/:id', getAdoptionHistoryById);
 
-// Evlat edinme tarihini güncelle
+// Adoption history güncelle
 router.put('/:id', updateAdoptionHistory);
 
-// Evlat edinme tarihini sil
+// Adoption history sil
 router.delete('/:id', deleteAdoptionHistory);
 
 module.exports = router;

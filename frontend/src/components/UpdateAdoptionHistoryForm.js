@@ -1,35 +1,31 @@
 import React, { useState } from "react";
-import { updateAdoptionHistory } from "../api/adoptionHistory";  // API'den import et
-import "../styles/UpdateAdoptionHistoryForm.css"; // CSS dosyasını import et
+import { updateAdoptionHistory } from "../api/adoption_history";
+import "../styles/UpdateAdoptionHistoryForm.css"; // Import the corresponding CSS file
 
 const UpdateAdoptionHistoryForm = () => {
-  const [adoptionHistoryId, setAdoptionHistoryId] = useState("");  // Adoption history ID
-  const [shelterId, setShelterId] = useState("");  // Shelter ID
-  const [adopterId, setAdopterId] = useState("");  // Adopter ID
-  const [animalId, setAnimalId] = useState("");  // Animal ID
-  const [adoptionDate, setAdoptionDate] = useState("");  // Adoption Date
-  const [error, setError] = useState(null);  // Error state
+  const [adoptionId, setAdoptionId] = useState("");
+  const [shelterId, setShelterId] = useState("");
+  const [adopterId, setAdopterId] = useState("");
+  const [adoptionDate, setAdoptionDate] = useState("");
+  const [animalId, setAnimalId] = useState("");
+  const [error, setError] = useState(null);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const updatedData = {
-      shelter_id: parseInt(shelterId),
-      adopter_id: parseInt(adopterId),
-      animal_id: parseInt(animalId),
-      adoption_date: adoptionDate,
-    };
+    const updatedData = { shelterId, adopterId, adoptionDate, animalId };
+
     try {
-      await updateAdoptionHistory(adoptionHistoryId, updatedData);
+      await updateAdoptionHistory(adoptionId, updatedData);
       alert("Adoption history updated successfully!");
       // Reset form
-      setAdoptionHistoryId("");
+      setAdoptionId("");
       setShelterId("");
       setAdopterId("");
-      setAnimalId("");
       setAdoptionDate("");
+      setAnimalId("");
     } catch (err) {
       console.error("Failed to update adoption history:", err);
-      setError("Failed to update adoption history: " + err.message); // Hata mesajını göster
+      setError("Failed to update adoption history: " + err.message); // Display error message
     }
   };
 
@@ -38,39 +34,28 @@ const UpdateAdoptionHistoryForm = () => {
       <h2>Update Adoption History</h2>
       <form onSubmit={handleUpdate}>
         <div>
-          <label>Adoption History ID:</label>
+          <label>Adoption ID:</label>
           <input
             type="text"
-            value={adoptionHistoryId}
-            onChange={(e) => setAdoptionHistoryId(e.target.value)}
+            value={adoptionId}
+            onChange={(e) => setAdoptionId(e.target.value)}
             required
           />
         </div>
         <div>
           <label>Shelter ID:</label>
           <input
-            type="number"
+            type="text"
             value={shelterId}
             onChange={(e) => setShelterId(e.target.value)}
-            required
           />
         </div>
         <div>
           <label>Adopter ID:</label>
           <input
-            type="number"
+            type="text"
             value={adopterId}
             onChange={(e) => setAdopterId(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Animal ID:</label>
-          <input
-            type="number"
-            value={animalId}
-            onChange={(e) => setAnimalId(e.target.value)}
-            required
           />
         </div>
         <div>
@@ -79,11 +64,18 @@ const UpdateAdoptionHistoryForm = () => {
             type="date"
             value={adoptionDate}
             onChange={(e) => setAdoptionDate(e.target.value)}
-            required
+          />
+        </div>
+        <div>
+          <label>Animal ID:</label>
+          <input
+            type="text"
+            value={animalId}
+            onChange={(e) => setAnimalId(e.target.value)}
           />
         </div>
         <button type="submit">Update Adoption History</button>
-        {error && <p style={{ color: "red" }}>{error}</p>}  {/* Error message display */}
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
     </div>
   );
