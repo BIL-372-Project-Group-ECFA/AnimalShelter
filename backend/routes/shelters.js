@@ -5,8 +5,17 @@ const {
   getAllShelters,
   getShelterById,
   updateShelter,
-  deleteShelter
+  deleteShelter,
+  getCurrentAnimalsByShelter,
+  getStrayAnimals,
+  addAnimalToTheShelter,
+  getExpiredVaccinations,
+  addVaccinations,
 } = require('../controllers/sheltersController');
+
+router.post('/:id/add-animal', addAnimalToTheShelter);
+
+router.get('/stray-animals', getStrayAnimals);
 
 // Yeni bir barınak ekle
 router.post('/', createShelter);
@@ -22,5 +31,12 @@ router.put('/:id', updateShelter);
 
 // Barınak sil
 router.delete('/:id', deleteShelter);
+
+// Bir barınaktaki hayvanları getir
+router.get('/:id/current-animals', getCurrentAnimalsByShelter);
+
+router.post('/:id/expired-vaccinations', getExpiredVaccinations);
+
+router.post('/:id/add-vaccinations', addVaccinations);
 
 module.exports = router;

@@ -10,6 +10,12 @@ module.exports = function(sequelize, DataTypes) {
     vaccine_name: {
       type: DataTypes.STRING(255),
       allowNull: false
+    },
+    validity_period: { // Yeni sütun
+      type: DataTypes.INTEGER,
+      allowNull: false, // Her aşının geçerlilik süresi olmalı
+      defaultValue: 12, // Varsayılan değer (12 ay)
+      comment: "Aşının geçerlilik süresi ay cinsinden tutulur"
     }
   }, {
     sequelize,
