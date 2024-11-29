@@ -1,0 +1,52 @@
+/* UpdateShelterHistoryForm.css */
+
+/* Wrapper for the form */
+div {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Header style */
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  /* Input field styling */
+  input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  /* Button styling */
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* Button hover effect */
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Error message styling */
+  p {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+  }
+  

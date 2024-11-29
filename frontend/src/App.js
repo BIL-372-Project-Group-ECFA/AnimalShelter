@@ -20,6 +20,21 @@ import UpdateVaccinationDetailForm from './components/UpdateVaccinationDetailFor
 import AddAdoptionHistoryForm from './components/AddAdoptionHistoryForm';
 import DeleteAdoptionHistoryForm from './components/DeleteAdoptionHistoryForm';
 import UpdateAdoptionHistoryForm from './components/UpdateAdoptionHistoryForm';
+import AddCurrentAdoptionForm from './components/AddCurrentAdoptionForm';
+import UpdateCurrentAdoptionForm from './components/UpdateCurrentAdoptionForm';
+import DeleteCurrentAdoptionForm from './components/DeleteCurrentAdoptionForm';
+import AddCurrentResidenceForm from './components/AddCurrentResidenceForm';
+import UpdateCurrentResidenceForm from './components/UpdateCurrentResidenceForm';
+import DeleteCurrentResidenceForm from './components/DeleteCurrentResidenceForm';
+import AddDonationForm from './components/AddDonationForm';
+import UpdateDonationForm from './components/UpdateDonationForm';
+import DeleteDonationForm from './components/DeleteDonationForm';
+import AddMedicalRecordForm from './components/AddMedicalRecordForm';
+import UpdateMedicalRecordForm from './components/UpdateMedicalRecordForm';
+import DeleteMedicalRecordForm from './components/DeleteMedicalRecordForm';
+import AddShelterHistoryForm from './components/AddShelterHistoryForm';
+import UpdateShelterHistoryForm from './components/UpdateShelterHistoryForm';
+import DeleteShelterHistoryForm from './components/DeleteShelterHistoryForm';
 
 
 function App() {
@@ -46,6 +61,21 @@ function App() {
             <AddAdoptionHistoryForm />
             <DeleteAdoptionHistoryForm />
             <UpdateAdoptionHistoryForm />
+            <AddCurrentAdoptionForm />
+            <UpdateCurrentAdoptionForm />
+            <DeleteCurrentAdoptionForm />
+            <AddCurrentResidenceForm />
+            <UpdateCurrentResidenceForm />
+            <DeleteCurrentResidenceForm />
+            <AddDonationForm />
+            <UpdateDonationForm />
+            <DeleteDonationForm />
+            <AddMedicalRecordForm />
+            <UpdateMedicalRecordForm />
+            <DeleteMedicalRecordForm />
+            <AddShelterHistoryForm />
+            <UpdateShelterHistoryForm />
+            <DeleteShelterHistoryForm />
          
         </div>
     );

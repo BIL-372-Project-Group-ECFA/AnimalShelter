@@ -9,6 +9,11 @@ const vaccineRoutes = require('./routes/vaccines');
 const veterinariansRoutes = require('./routes/veterinarians');
 const vaccinationDetailsRoutes = require('./routes/vaccinationDetails');
 const adoptionHistoryRoutes = require('./routes/adoptionHistory');
+const currentAdoptionRoutes = require('./routes/currentAdoption');
+const currentShelterResidenceRoutes = require('./routes/currentShelterResidences');
+const donationRoutes = require('./routes/donations');
+const medicalRecordsRoutes = require('./routes/medicalRecords');
+const shelterHistoryRoutes = require('./routes/shelterHistory');
 
 const app = express();
 
@@ -24,6 +29,11 @@ app.use('/vaccines', vaccineRoutes); // "/vaccines" rotasına gelen istekleri ro
 app.use('/veterinarians', veterinariansRoutes); // "/veterinarians" rotasına gelen istekleri routes/veterinarians.js'e yönlendir
 app.use('/vaccination-details', vaccinationDetailsRoutes); // "/vaccination-details" rotasına gelen istekleri routes/veterinarians.js'e yönlendir
 app.use('/adoption-history', adoptionHistoryRoutes); // "/adoption-history" rotasına gelen istekleri routes/veterinarians.js'e yönlendir
+app.use('/current-adoption', currentAdoptionRoutes); // "/current-adoption" rotasına gelen istekleri routes/veterinarians.js'e yönlendir
+app.use('/current-shelter-residences', currentShelterResidenceRoutes); // "/current-shelter-residences" rotasına gelen istekleri routes/veterinarians.js'e yönlendir
+app.use('/donations', donationRoutes); // "/donations" rotasına gelen istekleri routes/veterinarians.js'e yönlendir
+app.use('/medical-records', medicalRecordsRoutes); // "/medical-records" rotasına gelen istekleri routes/veterinarians.js'e yönlendir
+app.use('/shelter-history', shelterHistoryRoutes); // "/shelter-history" rotasına gelen istekleri routes/veterinarians.js'e yönlendir
 
 app.get('/hello', (req, res) => {
     res.json({ message: "Hello World" });
