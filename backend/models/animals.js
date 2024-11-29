@@ -30,7 +30,11 @@ module.exports = function(sequelize, DataTypes) {
     neutered: {
       type: DataTypes.BOOLEAN,
       allowNull: true
-    }
+    },
+    photo: {
+      type: DataTypes.BLOB,
+      allowNull: true, // Fotoğraf zorunlu değil
+    }    
   }, {
     sequelize,
     tableName: 'animals',

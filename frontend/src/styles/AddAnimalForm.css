@@ -1,5 +1,3 @@
-/* AddAnimalForm.css */
-
 /* Genel stil ayarları */
 form {
   background-color: #f9f9f9;
@@ -60,8 +58,34 @@ button:hover {
   background-color: #45a049;
 }
 
+/* Fotoğraf önizlemesi */
+.preview-container {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.preview-container p {
+  font-size: 14px;
+  color: #555;
+}
+
+.preview-container img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
 /* Hata mesajları */
-p {
+p.error-message {
   color: red;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Fotoğraf yükleme butonu */
+input[type="file"] {
   font-size: 14px;
 }
