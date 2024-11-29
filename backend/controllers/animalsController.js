@@ -1,9 +1,25 @@
+const multer = require('multer');
 const { animals } = require('../models/init-models')(require('../utils/db').sequelize);
 
-// Yeni bir hayvan ekle
+// Fotoğrafları bellekte tutacak multer yapılandırması
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only images are allowed'), false);
+    }
+  },
+});
+
+// Yeni bir hayvan ekle (fotoğraf dahil)
 const createAnimal = async (req, res) => {
   try {
     const { name, species, gender, breed, age, neutered } = req.body;
+    const photo = req.file ? req.file.buffer : null; // Fotoğraf bellekte tutuluyor
 
     const newAnimal = await animals.create({
       name,
@@ -11,7 +27,8 @@ const createAnimal = async (req, res) => {
       gender,
       breed,
       age,
-      neutered
+      neutered,
+      photo, // Fotoğrafı BLOB olarak kaydediyoruz
     });
 
     return res.status(201).json({ message: 'Animal created successfully', animal: newAnimal });
@@ -37,7 +54,7 @@ const getAnimalById = async (req, res) => {
   try {
     const { id } = req.params;
     const animal = await animals.findByPk(id);
-    
+
     if (!animal) {
       return res.status(404).json({ message: 'Animal not found' });
     }
@@ -54,6 +71,7 @@ const updateAnimal = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, species, gender, breed, age, neutered } = req.body;
+    const photo = req.file ? req.file.buffer : null;
 
     const animal = await animals.findByPk(id);
 
@@ -61,7 +79,7 @@ const updateAnimal = async (req, res) => {
       return res.status(404).json({ message: 'Animal not found' });
     }
 
-    await animal.update({ name, species, gender, breed, age, neutered });
+    await animal.update({ name, species, gender, breed, age, neutered, photo });
 
     return res.status(200).json({ message: 'Animal updated successfully', animal });
   } catch (error) {
@@ -91,9 +109,9 @@ const deleteAnimal = async (req, res) => {
 };
 
 module.exports = {
-  createAnimal,
+  createAnimal: [upload.single('photo'), createAnimal], // Middleware ile bağladık
   getAllAnimals,
   getAnimalById,
-  updateAnimal,
-  deleteAnimal
+  updateAnimal: [upload.single('photo'), updateAnimal], // Middleware ile bağladık
+  deleteAnimal,
 };

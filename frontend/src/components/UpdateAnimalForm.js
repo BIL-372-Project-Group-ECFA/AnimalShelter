@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { updateAnimal } from "../api/animals";
 import "../styles/UpdateAnimalForm.css"; // CSS dosyasını import et
 
-// Form bileşeni burada
-
 const UpdateAnimalForm = () => {
   const [animalId, setAnimalId] = useState("");
   const [name, setName] = useState("");
@@ -12,15 +10,44 @@ const UpdateAnimalForm = () => {
   const [breed, setBreed] = useState("");
   const [age, setAge] = useState("");
   const [neutered, setNeutered] = useState(false);
+  const [photo, setPhoto] = useState(null); // Fotoğraf dosyası
+  const [preview, setPreview] = useState(null); // Fotoğraf önizleme
   const [error, setError] = useState(null);
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    setPhoto(file); // Fotoğrafı kaydet
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setPreview(reader.result); // Önizleme için URL oluştur
+      reader.readAsDataURL(file);
+    } else {
+      setPreview(null); // Fotoğraf seçimi iptal edilirse önizlemeyi temizle
+    }
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const updatedData = { name, species, gender, breed, age: parseInt(age), neutered: neutered ? 1 : 0 };
     try {
-      await updateAnimal(animalId, updatedData);
+      const formData = new FormData();
+      formData.append("animalId", animalId);
+      formData.append("name", name);
+      formData.append("species", species);
+      formData.append("gender", gender);
+      formData.append("breed", breed);
+      formData.append("age", parseInt(age));
+      formData.append("neutered", neutered ? "1" : "0");
+      if (photo) {
+        formData.append("photo", photo); // Fotoğrafı ekle
+      }
+
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+
+      await updateAnimal(animalId,formData);
       alert("Animal updated successfully!");
-      // Reset form
+      // Formu sıfırla
       setAnimalId("");
       setName("");
       setSpecies("");
@@ -28,16 +55,18 @@ const UpdateAnimalForm = () => {
       setBreed("");
       setAge("");
       setNeutered(false);
+      setPhoto(null);
+      setPreview(null);
     } catch (err) {
       console.error("Failed to update animal:", err);
-      setError("Failed to update animal: " + err.message); // Hata mesajını göster
+      setError("Failed to update animal: " + (err.message || "Unknown error"));
     }
   };
 
   return (
     <div>
       <h2>Update Animal</h2>
-      <form onSubmit={handleUpdate}>
+      <form onSubmit={handleUpdate} encType="multipart/form-data">
         <div>
           <label>Animal ID:</label>
           <input
@@ -97,6 +126,24 @@ const UpdateAnimalForm = () => {
             onChange={(e) => setNeutered(e.target.checked)}
           />
         </div>
+        <div>
+          <label>Photo:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handlePhotoChange}
+          />
+        </div>
+        {preview && (
+          <div>
+            <p>Photo Preview:</p>
+            <img
+              src={preview}
+              alt="Selected animal"
+              style={{ width: "400px", height: "400px", objectFit: "cover" }}
+            />
+          </div>
+        )}
         <button type="submit">Update Animal</button>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
