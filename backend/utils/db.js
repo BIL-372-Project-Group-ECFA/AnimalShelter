@@ -24,7 +24,7 @@ async function initializeDatabase() {
     
         initModels(sequelize);
     
-        await sequelize.sync();
+        await sequelize.sync({ alter: true });
         console.log('Tables have been synchronized successfully!');
     
     } catch (error) {

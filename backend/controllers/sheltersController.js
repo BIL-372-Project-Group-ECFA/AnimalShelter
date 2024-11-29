@@ -1,7 +1,6 @@
 //const { shelters } = require('../models/init-models')(require('../utils/db').sequelize);
-const { models } = require("../utils/db"); // Modelleri içe aktarın
-const { animals, shelters, current_shelter_residences, shelter_history } = models;
-const { sequelize } = require('../utils/db');
+const { sequelize, models } = require("../utils/db"); // Modelleri içe aktarın
+const { animals, shelters, current_shelter_residences, shelter_history, vaccination_details, vaccines } = models;
 const Sequelize = require('sequelize');
 
 
@@ -222,6 +221,166 @@ const addAnimalToTheShelter = async (req, res) => {
 
 
 
+
+const getExpiredVaccinations = async (req, res) => {
+  const shelterId = req.params.id;
+  const { selectedDate } = req.body; // Barınak ID ve seçilen tarih
+
+  try {
+    const animalsInShelter = await animals.findAll({
+      attributes: ["animal_id", "name", "species", "age"],
+      include: [
+        {
+          model: current_shelter_residences,
+          as: "current_shelter_residence",
+          required: true,
+          include: [
+            {
+              model: shelter_history,
+              as: "shelter_residence",
+              required: true,
+              where: { shelter_id: shelterId }, // Barınak ID filtresi
+            },
+          ],
+        },
+      ],
+    });
+
+    // Tüm aşı tiplerini al
+    const allVaccines = await vaccines.findAll({
+      attributes: ["vaccine_id", "vaccine_name", "validity_period"],
+    });
+
+    const results = [];
+
+    for (const animal of animalsInShelter) {
+      const animalId = animal.animal_id;
+
+      // Hayvanın tüm aşı detaylarını al
+      const vaccinationDetails = await vaccination_details.findAll({
+        where: { animal_id: animalId },
+        attributes: ["vaccination_type_id", "vaccination_date"],
+        include: [
+          {
+            model: vaccines,
+            as: "vaccination_type",
+            attributes: ["vaccine_id", "vaccine_name", "validity_period"],
+          },
+        ],
+      });
+
+      const groupedVaccinations = vaccinationDetails.reduce((acc, detail) => {
+        const vaccineId = detail.vaccination_type_id;
+        const lastDate =
+          acc[vaccineId]?.vaccination_date || detail.vaccination_date;
+
+        acc[vaccineId] = {
+          vaccination_date:
+            new Date(lastDate) > new Date(detail.vaccination_date)
+              ? lastDate
+              : detail.vaccination_date,
+          vaccine_id: detail.vaccination_type.vaccine_id,
+          vaccine_name: detail.vaccination_type.vaccine_name,
+          validity_period: detail.vaccination_type.validity_period,
+        };
+
+        return acc;
+      }, {});
+
+      const expiredAndMissingVaccines = allVaccines
+        .map((vaccine) => {
+          const vaccinationRecord = groupedVaccinations[vaccine.vaccine_id];
+
+          if (!vaccinationRecord) {
+            return { 
+              vaccine_id: vaccine.vaccine_id, 
+              vaccine_name: vaccine.vaccine_name, 
+              status: "missing" 
+            };
+          }
+
+          const expirationDate = new Date(
+            vaccinationRecord.vaccination_date
+          );
+          expirationDate.setMonth(
+            expirationDate.getMonth() + vaccine.validity_period
+          );
+
+          if (expirationDate < new Date(selectedDate)) {
+            return {
+              vaccine_id: vaccine.vaccine_id,
+              vaccine_name: vaccine.vaccine_name,
+              vaccination_date: vaccinationRecord.vaccination_date,
+              expiration_date: expirationDate,
+              status: "expired",
+            };
+          }
+
+          return null;
+        })
+        .filter(Boolean);
+
+      if (expiredAndMissingVaccines.length > 0) {
+        results.push({
+          animal_id: animalId,
+          name: animal.name,
+          species: animal.species,
+          age: animal.age,
+          vaccinations: expiredAndMissingVaccines,
+        });
+      }
+    }
+
+    res.status(200).json({ results });
+  } catch (error) {
+    console.error("Aşı sorgusu sırasında hata:", error);
+    res.status(500).json({ message: "Sunucu hatası." });
+  }
+};
+
+
+
+
+const addVaccinations = async (req, res) => {
+  const shelterId = req.params.id;
+  const vaccinations = req.body; // Frontend'den gelen aşı bilgileri
+
+  try {
+    // Gelen verinin doğruluğunu kontrol et
+    if (!Array.isArray(vaccinations) || vaccinations.length === 0) {
+      return res.status(400).json({ message: "Geçerli bir aşı bilgisi gönderilmedi." });
+    }
+
+    // Her bir aşı için kayıt oluştur
+    const createdRecords = await Promise.all(
+      vaccinations.map(async (vaccination) => {
+        const { animal_id, vaccine_id, vaccination_date } = vaccination;
+
+        // Gerekli alanların eksik olup olmadığını kontrol et
+        if (!animal_id || !vaccine_id || !vaccination_date) {
+          throw new Error("Eksik aşı bilgisi tespit edildi.");
+        }
+
+        // Aşıyı `vaccination_details` tablosuna ekle
+        return await vaccination_details.create({
+          animal_id,
+          vaccination_type_id: vaccine_id,
+          vaccination_date,
+        });
+      })
+    );
+
+    res.status(201).json({
+      message: "Aşılar başarıyla eklendi.",
+      added_vaccinations: createdRecords,
+    });
+  } catch (error) {
+    console.error("Aşı ekleme hatası:", error.message);
+    res.status(500).json({ message: "Aşılar eklenirken bir hata oluştu.", error: error.message });
+  }
+};
+
+
 module.exports = {
   createShelter,
   getAllShelters,
@@ -231,4 +390,6 @@ module.exports = {
   getCurrentAnimalsByShelter,
   getStrayAnimals,
   addAnimalToTheShelter,
+  getExpiredVaccinations,
+  addVaccinations,
 };

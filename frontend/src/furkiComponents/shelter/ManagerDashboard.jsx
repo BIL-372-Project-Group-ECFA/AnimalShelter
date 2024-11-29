@@ -9,6 +9,8 @@ const ManagerDashboard = () => {
   const [view, setView] = useState("overview"); // Görünüm durumu
   const [error, setError] = useState(null); // Hata durumu
   const [arrivalDate, setArrivalDate] = useState(""); // Seçilen tarih
+  const [expiredVaccinations, setExpiredVaccinations] = useState([]); // Aşı bilgileri
+  const [selectedVaccinations, setSelectedVaccinations] = useState([]); // Seçilen aşılar
 
   // Shelter'daki hayvanları yükle
   useEffect(() => {
@@ -52,6 +54,64 @@ const ManagerDashboard = () => {
 
   const handleDateChange = (e) => {
     setArrivalDate(e.target.value); // Tarihi state'e kaydet
+  };
+
+  const fetchExpiredVaccinations = () => {
+    if (!arrivalDate) {
+      alert("Lütfen bir tarih seçiniz.");
+      return;
+    }
+
+    axiosInstance
+      .post(`/shelters/${selectedShelter.shelter_id}/expired-vaccinations`, {
+        selectedDate: arrivalDate,
+      })
+      .then((response) => {
+        setExpiredVaccinations(response.data.results || []); // Aşı bilgilerini state'e ekle
+      })
+      .catch((err) => {
+        console.error("Error fetching expired vaccinations:", err);
+        setError("Aşı bilgileri yüklenirken bir hata oluştu.");
+      });
+  };
+
+  const toggleVaccinationSelection = (animalId, vaccineId, vaccineName) => {
+    const key = `${animalId}-${vaccineId}-${vaccineName}`;
+    setSelectedVaccinations((prev) =>
+      prev.includes(key)
+        ? prev.filter((item) => item !== key) // Seçimlerden çıkar
+        : [...prev, key] // Seçimlere ekle
+    );
+  };
+
+  const handleVaccinationSubmission = () => {
+    if (selectedVaccinations.length === 0) {
+      alert("Hiçbir aşı seçilmedi.");
+      return;
+    }
+
+    // Seçilen aşıları uygun bir formata dönüştür
+    const vaccinationData = selectedVaccinations.map((selection) => {
+      const [animalId, vaccineId, vaccineName] = selection.split("-");
+      return {
+        animal_id: parseInt(animalId, 10),
+        vaccine_id: parseInt(vaccineId, 10),
+        vaccine_name: vaccineName,
+        vaccination_date: arrivalDate, // Seçilen tarih
+      };
+    });
+
+    // Backend'e POST isteği at
+    axiosInstance
+      .post(`/shelters/${selectedShelter.shelter_id}/add-vaccinations`, vaccinationData)
+      .then(() => {
+        alert("Aşılar başarıyla kaydedildi!");
+        setSelectedVaccinations([]); // Seçimleri sıfırla
+      })
+      .catch((err) => {
+        console.error("Error submitting vaccinations:", err);
+        setError("Aşılar kaydedilirken bir hata oluştu.");
+      });
   };
 
   const addAnimalToShelter = (animal) => {
@@ -115,6 +175,12 @@ const ManagerDashboard = () => {
         >
           Barınaktaki Hayvanlar
         </button>
+        <button
+          onClick={() => setView("vaccinations")}
+          className={view === "vaccinations" ? "active" : ""}
+        >
+          Aşılar
+        </button>
       </div>
 
       {view === "overview" && (
@@ -135,7 +201,7 @@ const ManagerDashboard = () => {
               type="date"
               id="arrivalDate"
               value={arrivalDate}
-              onChange={handleDateChange} // Tarih seçimi
+              onChange={handleDateChange}
             />
           </div>
           {error ? (
@@ -173,6 +239,58 @@ const ManagerDashboard = () => {
           ) : (
             <p>Barınakta hayvan bulunmamaktadır.</p>
           )}
+        </div>
+      )}
+
+      {view === "vaccinations" && (
+        <div>
+          <h3>Aşılar</h3>
+          <div>
+            <label htmlFor="vaccinationDate">
+              <strong>Aşı Tarihi:</strong>
+            </label>
+            <input
+              type="date"
+              id="vaccinationDate"
+              value={arrivalDate}
+              onChange={handleDateChange}
+            />
+            <button onClick={fetchExpiredVaccinations}>Listele</button>
+          </div>
+          {expiredVaccinations.length > 0 ? (
+            <ul className="list">
+              {expiredVaccinations.map((animal) => (
+                <li key={animal.animal_id}>
+                  <strong>{animal.name}</strong> ({animal.species}, {animal.age} yaşında)
+                  <ul>
+                    {animal.vaccinations.map((vaccine) => (
+                      <li key={vaccine.vaccine_id}>
+                        {vaccine.vaccine_name}
+                        <button
+                          onClick={() =>
+                            toggleVaccinationSelection(
+                              animal.animal_id,
+                              vaccine.vaccine_id,
+                              vaccine.vaccine_name
+                            )
+                          }
+                        >
+                          {selectedVaccinations.includes(
+                            `${animal.animal_id}-${vaccine.vaccine_id}-${vaccine.vaccine_name}`
+                          )
+                            ? "Kaldır"
+                            : "Seç"}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Geçerli aşı bulunmamaktadır.</p>
+          )}
+          <button onClick={handleVaccinationSubmission}>Aşıla</button>
         </div>
       )}
     </div>
