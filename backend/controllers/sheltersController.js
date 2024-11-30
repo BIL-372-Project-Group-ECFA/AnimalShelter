@@ -177,17 +177,17 @@ const getStrayAnimals = async (req, res) => {
 
 
 const addAnimalToTheShelter = async (req, res) => {
-  const shelterId = req.params.id; // Route parametresinden shelter ID alıyoruz
-  const { animal_id, arrival_date } = req.body; // Request body'sinden gerekli bilgileri alıyoruz
+  const shelterId = req.params.id; // Route parameter for shelter ID
+  const { animal_id, arrival_date } = req.body; // Get animal_id and arrival_date from the request body
 
   if (!animal_id || !arrival_date) {
-    return res.status(400).json({ message: "Animal ID ve Arrival Date gereklidir." });
+    return res.status(400).json({ message: "Animal ID and Arrival Date are required." });
   }
 
   try {
-    // Transaction başlatıyoruz
+    // Start a transaction
     const result = await sequelize.transaction(async (t) => {
-      // Shelter History tablosuna yeni kayıt ekle
+      // Add a new entry to shelter_history
       const shelterHistoryEntry = await shelter_history.create(
         {
           animal_id,
@@ -197,27 +197,39 @@ const addAnimalToTheShelter = async (req, res) => {
         { transaction: t }
       );
 
-      // shelter_history'den alınan shelter_residence_id'yi kullanarak current_shelter_residences'a ekle
+      // Add a new entry to current_shelter_residences
       await current_shelter_residences.create(
         {
           animal_id,
-          shelter_residence_id: shelterHistoryEntry.shelter_residence_id, // Yeni oluşturulan ID
+          shelter_residence_id: shelterHistoryEntry.shelter_residence_id,
         },
         { transaction: t }
+      );
+
+      // Increment the current_animal_count for the shelter
+      await shelters.increment(
+        'current_animal_count', // Field to increment
+        {
+          by: 1, // Increment by 1
+          where: { shelter_id: shelterId },
+          transaction: t, // Ensure this is part of the transaction
+        }
       );
 
       return shelterHistoryEntry;
     });
 
+    // Respond with success
     return res.status(201).json({
-      message: "Hayvan barınağa başarıyla eklendi.",
+      message: "Animal successfully added to the shelter.",
       shelterResidenceId: result.shelter_residence_id,
     });
   } catch (error) {
-    console.error("Hayvan eklenirken hata oluştu:", error);
-    return res.status(500).json({ message: "Sunucu hatası. Hayvan eklenemedi." });
+    console.error("Error while adding animal to the shelter:", error);
+    return res.status(500).json({ message: "Server error. Animal could not be added." });
   }
 };
+
 
 
 

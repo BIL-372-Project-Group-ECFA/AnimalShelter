@@ -1,0 +1,97 @@
+/* Genel stil */
+.shelter-selection-container {
+    font-family: 'Arial', sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .shelter-name {
+    text-transform: capitalize;
+  }
+  
+  
+  /* Başlık */
+  .page-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #007bff;
+    margin-bottom: 30px;
+  }
+  
+  /* Barınaklar listesi */
+  .shelter-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .shelter-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .shelter-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shelter-name {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .shelter-item p {
+    font-size: 1rem;
+    color: #555;
+    margin: 5px 0;
+  }
+  
+  .select-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .select-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .select-button:active {
+    background-color: #0056b3;
+  }
+  
+  /* Hata Mesajları */
+  .error-message {
+    color: red;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+  
+  /* Mobil uyum */
+  @media (max-width: 768px) {
+    .shelter-list {
+      grid-template-columns: 1fr; /* Tek sütun yap */
+    }
+  
+    .shelter-item {
+      padding: 15px;
+    }
+  
+    .page-title {
+      font-size: 2rem;
+    }
+  }
+  

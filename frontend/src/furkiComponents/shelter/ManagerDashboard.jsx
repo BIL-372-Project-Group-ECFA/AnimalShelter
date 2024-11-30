@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import axiosInstance from "../../api/axiosInstance";
+import "./ManagerDashboard.css";
+
 
 const ManagerDashboard = () => {
   const { selectedShelter } = useContext(AppContext);
@@ -142,9 +144,10 @@ const ManagerDashboard = () => {
 
   return (
     <div className="container">
-      <h1 className="title">Barınak Yönetici Paneli</h1>
+      <h1 className="title">BARINAK YÖNETİCİ PANELİ</h1>
       <div className="shelter-info">
-        <h2>{selectedShelter.location}</h2>
+      <h2>{selectedShelter.location.toLowerCase('tr').split(' ').map(word => word.charAt(0).toLocaleUpperCase('tr') + word.slice(1)).join(' ')}</h2>
+
         <p>
           <strong>Kapasite:</strong> {selectedShelter.capacity}
         </p>
@@ -157,12 +160,16 @@ const ManagerDashboard = () => {
       </div>
 
       <div className="buttons">
+        
+
         <button
           onClick={() => setView("overview")}
           className={view === "overview" ? "active" : ""}
         >
           Genel Bakış
         </button>
+        
+
         <button
           onClick={() => setView("strayAnimals")}
           className={view === "strayAnimals" ? "active" : ""}
@@ -233,8 +240,11 @@ const ManagerDashboard = () => {
                   <strong>Adı:</strong> {animal.name} <br />
                   <strong>Türü:</strong> {animal.species} <br />
                   <strong>Yaşı:</strong> {animal.age} <br />
+                  
                 </li>
+                
               ))}
+              
             </ul>
           ) : (
             <p>Barınakta hayvan bulunmamaktadır.</p>

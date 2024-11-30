@@ -1,0 +1,86 @@
+/* Main Container */
+.role-selection-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full viewport height */
+  margin: 0; /* Center vertically and horizontally */
+  text-align: center;
+}
+
+/* Header Styling */
+.role-selection-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #007bff; /* Blue color */
+  font-weight: bold;
+}
+
+/* Cards Container */
+.role-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Individual Card Design */
+.role-card {
+  width: 250px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.role-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+.role-card p {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Hover Effects */
+.role-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background-color: #e9f5ff;
+}
+
+.role-card:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon Styling */
+.role-icon {
+  font-size: 3rem; /* Icon size */
+  color: #007bff; /* Icon color */
+  margin-bottom: 10px; /* Space below the icon */
+  transition: transform 0.2s;
+}
+
+.role-card:hover .role-icon {
+  transform: scale(1.1); /* Slightly enlarge icon on hover */
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .role-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .role-card {
+    width: 90%;
+  }
+}

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import axiosInstance from "../../api/axiosInstance";
+import "./ShelterSelection.css"; // CSS dosyasını dahil et
 
 const ShelterSelection = () => {
   const { setSelectedShelter } = useContext(AppContext);
@@ -10,7 +11,7 @@ const ShelterSelection = () => {
 
   useEffect(() => {
     axiosInstance
-      .get('/shelters') // Backend API çağrısı
+      .get("/shelters") // Backend API çağrısı
       .then((response) => {
         console.log("API response data:", response.data); // Veriyi kontrol et
         if (Array.isArray(response.data)) {
@@ -28,21 +29,26 @@ const ShelterSelection = () => {
   };
 
   return (
-    <div>
-      <h1>Barınak Seçimi</h1>
+    <div className="shelter-selection-container">
+      <h1 className="page-title">Barınak Seçimi</h1>
       {Array.isArray(shelters) && shelters.length > 0 ? (
-        <ul>
+        <div className="shelter-list">
           {shelters.map((shelter) => (
-            <li key={shelter.shelter_id}>
-              <strong>Barınak ID:</strong> {shelter.shelter_id} <br />
-              <strong>Konum:</strong> {shelter.location} <br />
-              <strong>Kapasite:</strong> {shelter.capacity} <br />
-              <strong>Mevcut Hayvan Sayısı:</strong> {shelter.current_animal_count} <br />
-              <strong>Telefon:</strong> {shelter.phone_number} <br />
-              <button onClick={() => handleShelterSelection(shelter)}>Seç</button>
-            </li>
+            <div key={shelter.shelter_id} className="shelter-item">
+              <h3 className="shelter-name">{shelter.location.toLowerCase('tr').split(' ').map(word => word.charAt(0).toLocaleUpperCase('tr') + word.slice(1)).join(' ')}</h3> 
+              <p><strong>Barınak ID:</strong> {shelter.shelter_id}</p>
+              <p><strong>Kapasite:</strong> {shelter.capacity}</p>
+              <p><strong>Mevcut Hayvan Sayısı:</strong> {shelter.current_animal_count}</p>
+              <p><strong>Telefon:</strong> {shelter.phone_number}</p>
+              <button
+                className="select-button"
+                onClick={() => handleShelterSelection(shelter)}
+              >
+                Seç
+              </button>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
         <p>Barınaklar yükleniyor veya bulunamadı...</p>
       )}
