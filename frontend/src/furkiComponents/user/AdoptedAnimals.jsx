@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import { AppContext } from "../../context/AppContext";
 
 const AdoptedAnimals = () => {
+  const { userId } = useContext(AppContext);
+
   const adoptedAnimals = [
     { id: 1, name: "Kara", species: "Kedi", age: 2 },
     { id: 2, name: "Beyaz", species: "Köpek", age: 3 },

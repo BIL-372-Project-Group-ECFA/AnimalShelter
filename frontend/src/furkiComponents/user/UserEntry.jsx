@@ -6,6 +6,7 @@ import { addUser } from "../../api/users";
 import axiosInstance from "../../api/axiosInstance";
 
 const UserEntry = () => {
+    const { setUserId } = useContext(AppContext);
     const [username, setUsername] = useState('');
     const [formVisible, setFormVisible] = useState(false);
     const [formData, setFormData] = useState({
@@ -24,16 +25,14 @@ const UserEntry = () => {
         return;
       }
 
-      try {
-        await axiosInstance.get(`/users/username/${username}`);
-        //alert('Başarıyla giriş yapıldı.');
-        console.log('Giriş yapıldı:', username);
-
-        navigate("/user-dashboard");
-
-      } catch(error) {
-        alert('Geçerli bir kullanıcı ismi girin veya yeni kullanıcı oluşturun.');
-      }    
+      axiosInstance.get(`/users/username/${username}`)
+        .then((response) => {
+          console.log('Giriş yapıldı:', username);
+          setUserId(response.data.user_id);
+          navigate("/user-dashboard");
+        }).catch((error) => {
+          alert('Geçerli bir kullanıcı ismi girin veya yeni kullanıcı oluşturun.');
+        });
     };
   
     const handleCreateUser = () => {

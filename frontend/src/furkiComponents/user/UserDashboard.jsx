@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../context/AppContext";
 import AdoptedAnimals from "./AdoptedAnimals";
 import "./UserDashboard.css";
 
 const UserDashboard = () => {
+  const { userId } = useContext(AppContext);
   const [activeView, setActiveView] = useState("overview"); // Aktif görünüm state'i
 
   const renderView = () => {
