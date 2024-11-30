@@ -15,6 +15,8 @@ const UserEntry = () => {
       contact_number: '',
       email: ''
     });
+
+    const navigate = useNavigate();
   
     const handleLogin = async () => {
       if (!username) {
@@ -24,16 +26,14 @@ const UserEntry = () => {
 
       try {
         await axiosInstance.get(`/users/username/${username}`);
-        alert('Başarıyla giriş yapıldı.');
-        
+        //alert('Başarıyla giriş yapıldı.');
+        console.log('Giriş yapıldı:', username);
+
+        navigate("/user-dashboard");
+
       } catch(error) {
         alert('Geçerli bir kullanıcı ismi girin veya yeni kullanıcı oluşturun.');
       }    
-
-
-
-      console.log('Giriş yapıldı:', username);
-      // Backend'e login isteği burada yapılabilir
     };
   
     const handleCreateUser = () => {
