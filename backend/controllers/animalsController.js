@@ -51,6 +51,7 @@ const getAllAnimals = async (req, res) => {
 
 // Tek bir hayvanı getir
 const getAnimalById = async (req, res) => {
+  console.log("EYvah");
   try {
     const { id } = req.params;
     const animal = await animals.findByPk(id);
@@ -108,10 +109,41 @@ const deleteAnimal = async (req, res) => {
   }
 };
 
+const getAnimalsByIds = async (req, res) => {
+  try {
+    const { animal_ids } = req.query;  // Query string ile alınan animal_ids
+    if (!animal_ids) {
+      return res.status(400).json({ message: "No animal IDs provided" });
+    }
+
+    // animal_ids'leri virgülle ayırıp dizi haline getiriyoruz
+    const animalIdsArray = animal_ids.split(',').map(id => parseInt(id, 10));
+
+    // Animal ID'leri ile sorgulama yapıyoruz
+    const animalsData = await animals.findAll({
+      where: {
+        id: animalIdsArray  // animalIdsArray, sorgu yapılacak id'leri içeriyor
+      }
+    });
+
+    // Eğer hayvanlar bulunmazsa, uygun mesaj ile dönüş yapıyoruz
+    if (animalsData.length === 0) {
+      return res.status(404).json({ message: 'No animals found with the provided IDs' });
+    }
+
+    return res.status(200).json(animalsData);
+  } catch (error) {
+    console.error('Error fetching animals:', error);
+    return res.status(500).json({ message: 'Error fetching animals', error: error.message });
+  }
+};
+
+
 module.exports = {
   createAnimal: [upload.single('photo'), createAnimal], // Middleware ile bağladık
   getAllAnimals,
   getAnimalById,
   updateAnimal: [upload.single('photo'), updateAnimal], // Middleware ile bağladık
   deleteAnimal,
+  getAnimalsByIds,
 };

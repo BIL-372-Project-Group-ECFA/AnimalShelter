@@ -1,4 +1,4 @@
-const { donations } = require('../models/init-models')(require('../utils/db').sequelize);
+const { donations, shelters } = require('../models/init-models')(require('../utils/db').sequelize);
 
 // Yeni bir bağış ekle
 const createDonation = async (req, res) => {
@@ -27,20 +27,43 @@ const getAllDonations = async (req, res) => {
   try {
     const allDonations = await donations.findAll();
 
-    // Tarih formatını geri çevir: 'DD-MM-YYYY' -> 'YYYY-MM-DD'
-    const formattedDonations = allDonations.map(donation => ({
-      ...donation.toJSON(),
-      donation_date: donation.donation_date
-        ? donation.donation_date.split('.').reverse().join('-')
-        : null,
-    }));
-
-    return res.status(200).json(formattedDonations);
+    return res.status(200).json(allDonations);
   } catch (error) {
     console.error('Error fetching donations:', error);
     return res.status(500).json({ message: 'Error fetching donations', error: error.message });
   }
 };
+
+// Belirli bir donor_id için bağışları getir
+
+const getDonationsByDonorId = async (req, res) => {
+  const { donor_id: donorId } = req.params;
+
+  try {
+    const donationData = await donations.findAll({
+      where: { donor_id: donorId },
+      include: [
+        {
+          model: shelters,
+          as: "shelter",
+          attributes: ["shelter_id", "location"],
+        },
+      ],
+    });
+
+    if (!donationData.length) {
+      return res.status(404).json({ message: "No donations found for this donor." });
+    }
+
+    return res.status(200).json(donationData);
+  } catch (error) {
+    console.error("Error fetching donations by donor_id:", error);
+    return res.status(500).json({ message: "Error fetching donations by donor_id", error: error.message });
+  }
+};
+
+
+
 
 // Tek bir bağışı getir
 const getDonationById = async (req, res) => {
@@ -52,15 +75,7 @@ const getDonationById = async (req, res) => {
       return res.status(404).json({ message: 'Donation not found' });
     }
 
-    // Tarih formatını geri çevir
-    const formattedDonation = {
-      ...donation.toJSON(),
-      donation_date: donation.donation_date
-        ? donation.donation_date.split('.').reverse().join('-')
-        : null,
-    };
-
-    return res.status(200).json(formattedDonation);
+    return res.status(200).json(donation);
   } catch (error) {
     console.error('Error fetching donation:', error);
     return res.status(500).json({ message: 'Error fetching donation', error: error.message });
@@ -73,9 +88,6 @@ const updateDonation = async (req, res) => {
     const { id } = req.params;
     const { shelter_id, donor_id, amount, donation_date } = req.body;
 
-    // Tarihi tersine çevir
-    const formattedDate = donation_date ? donation_date.split('.').reverse().join('-') : null;
-
     const donation = await donations.findByPk(id);
 
     if (!donation) {
@@ -86,7 +98,7 @@ const updateDonation = async (req, res) => {
       shelter_id,
       donor_id,
       amount,
-      donation_date: formattedDate,
+      donation_date,
     });
 
     return res.status(200).json({ message: 'Donation updated successfully', donation });
@@ -120,6 +132,7 @@ module.exports = {
   createDonation,
   getAllDonations,
   getDonationById,
+  getDonationsByDonorId,
   updateDonation,
   deleteDonation,
 };

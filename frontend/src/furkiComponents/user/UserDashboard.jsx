@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import AdoptedAnimals from "./AdoptedAnimals";
 import UserOverview from "./UserOverview";
+import MakeDonations from "./MakeDonations";
+import DonationHistory from "./DonationHistory";
+import AdoptNewAnimal from "./AdoptNewAnimal";
 import "./UserDashboard.css";
 
 const UserDashboard = () => {
@@ -14,29 +17,11 @@ const UserDashboard = () => {
       case "adoptedAnimals":
         return <AdoptedAnimals />;
       case "newAdoption":
-        return (
-          <div>
-            <h3>Yeni Hayvan Sahiplen</h3>
-            <p>Hayvan sahiplenme işlemi burada yapılacak.</p>
-            {/* Sahiplenme formu veya seçenekler eklenecek */}
-          </div>
-        );
+        return <AdoptNewAnimal />;
       case "newDonation":
-        return (
-          <div>
-            <h3>Yeni Bağış Yap</h3>
-            <p>Bağış yapma işlemi burada yapılacak.</p>
-            {/* Bağış formu veya seçenekler eklenecek */}
-          </div>
-        );
+        return <MakeDonations/>;
       case "donationHistory":
-        return (
-          <div>
-            <h3>Geçmiş Bağışlar</h3>
-            <p>Yapılan bağışların geçmişi burada görüntülenecek.</p>
-            {/* Bağış geçmişi burada listelenecek */}
-          </div>
-        );
+        return <DonationHistory />;
       default:
         return <UserOverview />;
     }

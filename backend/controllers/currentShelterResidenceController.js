@@ -49,11 +49,13 @@ const getAllCurrentShelterResidences = async (req, res) => {
       include: [
         {
           model: animals,
+          as: "animal",  // Alias'ı doğru kullanıyoruz
           attributes: ['name', 'species', 'breed', 'age', 'gender'],
         },
         {
           model: shelter_history,
-          attributes: ['shelter_entry_date', 'shelter_exit_date'],
+          as: "shelter_residence",  // Alias'ı doğru kullanıyoruz
+          attributes: ['arrival_date'],
         },
       ],
     });
@@ -68,23 +70,34 @@ const getAllCurrentShelterResidences = async (req, res) => {
   }
 };
 
+
+
+
 /**
  * Get a specific current shelter residence by ID
  */
 const getCurrentShelterResidenceById = async (req, res) => {
   try {
-    const { id } = req.params;
+    // URL'den gelen id parametresini alıyoruz
+    const { animal_id } = req.params;
+    const id = animal_id;
+    if (!id) {
+      return res.status(400).json({ message: 'Animal ID is required' });
+    }
 
+    // animal_id'yi kullanarak veritabanında sorgu yapıyoruz
     const residence = await current_shelter_residences.findOne({
-      where: { animal_id: id },
+      where: { animal_id: id },  // animal_id ile sorgulama yapıyoruz
       include: [
         {
           model: animals,
+          as: "animal",  // Alias kullanımı doğru
           attributes: ['name', 'species', 'breed', 'age', 'gender'],
         },
         {
           model: shelter_history,
-          attributes: ['shelter_entry_date', 'shelter_exit_date'],
+          as: "shelter_residence",  // Alias kullanımı doğru
+          attributes: ['arrival_date'],
         },
       ],
     });
@@ -102,6 +115,8 @@ const getCurrentShelterResidenceById = async (req, res) => {
     });
   }
 };
+
+
 
 /**
  * Update a specific current shelter residence
@@ -142,12 +157,14 @@ const updateCurrentShelterResidence = async (req, res) => {
   }
 };
 
+
 /**
  * Delete a specific current shelter residence
  */
 const deleteCurrentShelterResidence = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { animal_id } = req.params;
+    const id = animal_id;
 
     const residence = await current_shelter_residences.findOne({
       where: { animal_id: id },
@@ -168,6 +185,7 @@ const deleteCurrentShelterResidence = async (req, res) => {
     });
   }
 };
+
 
 module.exports = {
   createCurrentShelterResidence,

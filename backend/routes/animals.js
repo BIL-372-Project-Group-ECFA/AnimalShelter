@@ -5,7 +5,8 @@ const {
   getAllAnimals,
   getAnimalById,
   updateAnimal,
-  deleteAnimal
+  deleteAnimal,
+  getAnimalsByIds,
 } = require('../controllers/animalsController');
 
 // Yeni bir hayvan ekle
@@ -22,5 +23,7 @@ router.put('/:id', updateAnimal);
 
 // Hayvan sil
 router.delete('/:id', deleteAnimal);
+
+router.get('/getSpecificAnimals', getAnimalsByIds);
 
 module.exports = router;

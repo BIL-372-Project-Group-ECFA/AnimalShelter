@@ -5,7 +5,8 @@ const {
   getAllDonations,
   getDonationById,
   updateDonation,
-  deleteDonation
+  deleteDonation,
+  getDonationsByDonorId
 } = require('../controllers/donationsController');
 
 // Yeni bir bağış ekle
@@ -23,4 +24,8 @@ router.put('/:id', updateDonation);
 // Bağışı sil
 router.delete('/:id', deleteDonation);
 
+// Belirli bir donor_id'ye ait bağışları getir
+router.get('/donor/:donor_id', getDonationsByDonorId);
+
 module.exports = router;
+

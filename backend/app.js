@@ -35,6 +35,7 @@ app.use('/donations', donationRoutes); // "/donations" rotasına gelen istekleri
 app.use('/medical-records', medicalRecordsRoutes); // "/medical-records" rotasına gelen istekleri routes/veterinarians.js'e yönlendir
 app.use('/shelter-history', shelterHistoryRoutes); // "/shelter-history" rotasına gelen istekleri routes/veterinarians.js'e yönlendir
 
+
 app.get('/hello', (req, res) => {
     res.json({ message: "Hello World" });
 });
