@@ -152,6 +152,24 @@
   ul ul li button:hover {
     background-color: #0056b3;
   }
+
+  .vaccination-details {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .vaccination-details ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .vaccination-details li {
+    margin-bottom: 10px;
+  }
   
   /* Mobil Uyum */
   @media (max-width: 768px) {

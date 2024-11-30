@@ -1,0 +1,107 @@
+/* Genel Stil */
+.user-entry-container {
+    font-family: 'Arial', sans-serif;
+    max-width: 400px; /* Maksimum genişliği sınırladık */
+    margin: 0 auto; /* Ortalama */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center; /* İçeriği ortalar */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Tam ekran ortalama */
+  }
+  
+  /* Başlık */
+  .user-entry-title {
+    font-size: 2rem; /* Boyutu biraz küçülttük */
+    color: #007bff;
+    margin-bottom: 20px; /* Daha düzgün bir boşluk bıraktık */
+  }
+  
+  /* Giriş Alanı */
+  .login-container {
+    margin-bottom: 20px;
+    width: 100%; /* Genişlik kutunun tamamına yayılır */
+  }
+  
+  .login-container input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 10px; /* Daha düzenli bir boşluk bıraktık */
+    box-sizing: border-box;
+  }
+  
+  .login-container button {
+    width: 100%;
+  }
+  
+  /* Form */
+  .new-user-form {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%; /* Form genişliği kutuya uyar */
+  }
+  
+  .new-user-form input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 10px; /* Daha düzenli bir boşluk bıraktık */
+    box-sizing: border-box;
+  }
+  
+  .new-user-form.show {
+    display: flex;
+  }
+  
+  /* Butonlar */
+  .user-entry-button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    width: 100%; /* Buton genişliği form genişliğiyle uyumlu */
+  }
+  
+  .user-entry-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .user-entry-button:active {
+    background-color: #0056b3;
+    transform: translateY(2px);
+  }
+  
+  /* Mobil Uyumluluk */
+  @media (max-width: 768px) {
+    .user-entry-title {
+      font-size: 1.5rem; /* Daha küçük ekranlar için boyut küçültüldü */
+    }
+  
+    .user-entry-button {
+      font-size: 0.9rem;
+      padding: 10px;
+    }
+  
+    .login-container input,
+    .new-user-form input {
+      font-size: 0.9rem;
+      padding: 8px;
+    }
+  }
+  

@@ -5,7 +5,8 @@ const {
   getAllUsers,
   getUserById,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserByUsername
 } = require('../controllers/usersController');
 
 // Create a new user
@@ -16,6 +17,9 @@ router.get('/', getAllUsers);
 
 // Get a single user by ID
 router.get('/:id', getUserById);
+
+// Get a single user by username
+router.get('/username/:username', getUserByUsername);
 
 // Update a user
 router.put('/:id', updateUser);

@@ -11,6 +11,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(100),
       allowNull: false
     },
+    username: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      unique: true, // Username için unique kısıt
+    },
     surname: {
       type: DataTypes.STRING(100),
       allowNull: false
@@ -52,6 +57,12 @@ module.exports = function(sequelize, DataTypes) {
         fields: [
           { name: "email" },
         ]
+      },
+      {
+        name: 'username',
+        unique: true, // Username sütunu için index
+        using: 'BTREE',
+        fields: [{ name: 'username' }],
       },
     ]
   });
