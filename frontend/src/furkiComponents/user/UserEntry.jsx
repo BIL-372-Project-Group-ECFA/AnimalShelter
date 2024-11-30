@@ -12,9 +12,11 @@ const UserEntry = () => {
     const [formData, setFormData] = useState({
       name: '',
       surname: '',
-      username: '',
       contact_number: '',
-      email: ''
+      address: '',
+      email: '',
+      occupation: '',
+      username: '',
     });
 
     const navigate = useNavigate();
@@ -40,7 +42,7 @@ const UserEntry = () => {
     };
   
     const handleFormSubmit = async () => {
-      if (!formData.name || !formData.surname || !formData.username || !formData.contact_number || !formData.email) {
+      if (!formData.name || !formData.surname || !formData.contact_number || !formData.address || !formData.email || !formData.occupation || !formData.username) {
         alert('Lütfen tüm alanları doldurun.');
         return;
       }
@@ -49,7 +51,7 @@ const UserEntry = () => {
       console.log('Yeni kullanıcı oluşturuldu:', formData);
       // Backend'e yeni kullanıcı oluşturma isteği burada yapılabilir
       setFormVisible(false);
-      setFormData({ name: '', surname: '', username: '', contact_number: '', email: '' });
+      setFormData({ name: '', surname: '', contact_number: '', address: '', email: '', occupation: '', username: '' });
     };
   
     const handleInputChange = (e) => {
@@ -111,6 +113,21 @@ const UserEntry = () => {
             value={formData.email}
             onChange={handleInputChange}
           />
+          <input
+            type="text"
+            placeholder="Adres"
+            name="address"
+            value={formData.address}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            placeholder="Meslek"
+            name="occupation"
+            value={formData.occupation}
+            onChange={handleInputChange}
+          />
+
           <button className="user-entry-button" onClick={handleFormSubmit}>
             Kaydet
           </button>
