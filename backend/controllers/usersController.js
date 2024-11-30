@@ -3,12 +3,13 @@ const { users } = require('../models/init-models')(require('../utils/db').sequel
 // Create a new user
 const createUser = async (req, res) => {
   try {
-    const { name, surname, contact_number, address, email, occupation } = req.body;
+    const { name, surname, contact_number, username, address, email, occupation } = req.body;
 
     const newUser = await users.create({
       name,
       surname,
       contact_number,
+      username,
       address,
       email,
       occupation,
@@ -48,6 +49,22 @@ const getUserById = async (req, res) => {
     return res.status(500).json({ message: 'Error fetching user', error: error.message });
   }
 };
+
+const getUserByUsername = async (req, res) => {
+    try {
+      const { username } = req.params;
+      const selectedUser = await users.findOne({ where: { username } });
+  
+      if (!selectedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      return res.status(200).json(selectedUser);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      return res.status(500).json({ message: 'Error fetching user', error: error.message });
+    }
+  };
 
 // Update a user
 const updateUser = async (req, res) => {
@@ -94,6 +111,7 @@ module.exports = {
   createUser,
   getAllUsers,
   getUserById,
+  getUserByUsername,
   updateUser,
   deleteUser,
 };

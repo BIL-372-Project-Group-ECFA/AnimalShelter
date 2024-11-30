@@ -10,7 +10,10 @@ const RoleSelection = () => {
 
   const handleRoleSelection = (selectedRole) => {
     setRole(selectedRole); // Save role to global state
-    navigate("/shelter-selection"); // Navigate to shelter selection
+    if(selectedRole === "manager")
+      navigate("/shelter-selection"); // Navigate to shelter selection
+    else if(selectedRole === "user")
+      navigate("/user-entry");
   };
 
   return (
