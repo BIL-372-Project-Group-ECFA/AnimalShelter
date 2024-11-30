@@ -43,17 +43,57 @@ Provide SQL query for adding 10 entries to the table and columns specified as I 
 `
 };
 
+const generatePrompt = (type, rowCount) => {
+    const prompts = {
+        animals: `
+Provide SQL query for adding ${rowCount} entries to the table and columns specified as I specify and include only the SQL query in your response, nothing else.
+Each entry should be added via a different INSERT INTO query each of which written in a single line. I mean, there should be as many lines as the insert statements in your response.
+There must not be empty lines between insert statements.
+   Table: animals
+   Columns: 
+     - name (string),
+     - species (string, e.g., "dog", "cat", "rabbit"),
+     - gender (string, "Male" or "Female"),
+     - breed
+     - age (integer, between 1 and 15),
+     - neutered (integer, 0 or 1)
+`,
+        veterinarians: `
+Provide SQL query for adding ${rowCount} entries to the table and columns specified as I specify and include only the SQL query in your response, nothing else.
+   Table: veterinarians
+   Columns: 
+     - name (string),
+     - specialization (string, e.g., "dog", "cat", "rabbit"),
+     - phone_number (string, valid phone format),
+     - years_of_experience (integer, between 1 and 30)
+`,
+        shelters: `
+Provide SQL query for adding ${rowCount} entries to the table and columns specified as I specify and include only the SQL query in your response, nothing else.
+   Table: shelters
+   Columns: 
+     - location (string),
+     - capacity (integer, between 20 and 100),
+     - phone_number (string, valid phone format),
+     - current_animal_count (integer, between 0 and capacity)
+`
+    };
+
+    return prompts[type];
+};
+
 // Veri oluşturma fonksiyonu
 const handleGenerateData = async (req, res) => {
     const { type } = req.params;
+    const rowCount = parseInt(req.params.rowCount, 10) || 5; // Gelen satır sayısı ya da varsayılan 5
 
     try {
-        // Prompt'u seç
+        // Prompt'u oluştur
         let prompt;
         if (type === 'vaccinations')
-            prompt = await formatPromptForVaccinations();
+            prompt = await formatPromptForVaccinations(rowCount);
         else
-            prompt = prompts[type];
+            prompt = generatePrompt(type, rowCount);
+
         if (!prompt) {
             return res.status(400).json({ error: "Invalid type provided." });
         }
@@ -72,8 +112,7 @@ const handleGenerateData = async (req, res) => {
         const txtOutputPath = path.join(__dirname, `../data/generated_${type}_data.txt`);
         fs.writeFileSync(jsonOutputPath, JSON.stringify({ data: generatedData }, null, 2));
         fs.writeFileSync(txtOutputPath, generatedData);
-        // Sorguyu çalıştır veya kontrol için logla
-        
+
         console.log(`Veri başarıyla oluşturuldu ve '${jsonOutputPath}' dosyasına kaydedildi.`);
         res.status(200).json({ message: `${type} için veri başarıyla oluşturuldu.` });
 
@@ -159,7 +198,7 @@ const getAnimalIds = async () => {
     }
   };
 
-  const formatPromptForVaccinations = async () => {
+  const formatPromptForVaccinations = async (rowCount) => {
     let animalIds = null;
     let vaccineIds = null;
 
@@ -167,26 +206,27 @@ const getAnimalIds = async () => {
         animalIds = await getAnimalIds();
         vaccineIds = await getVaccineIds();
     } catch (error) {
-        console.error("error while formatting the prompt for vaccinations");
-    }    
+        console.error("Error while formatting the prompt for vaccinations:", error);
+    }
 
     return `
-  Using the following lists:
-  - animal_id: [${animalIds.join(", ")}]
-  - vaccine_id: [${vaccineIds.join(", ")}]
-  
-  Generate SQL insert statements for the table "vaccination_details". Each row should have:
-  - vaccination_id: Auto-increment (do not include in SQL statement).
-  - animal_id: Randomly pick from the animal_id list.
-  - vaccination_type_id: Randomly pick from the vaccine_id list.
-  - vaccination_date: Random date in the last 2 years.
-  
-  You may add multiple types of vaccinations for the same animal.
-  I want you to add as many entries to the vaccination_details as the number of animal ids.
-  The SQL query should only include valid insert statements.
-  Each entry should be added via a different INSERT INTO statement.
-  I mean, your answer should only include the SQL query.`;
-  };
+Using the following lists:
+- animal_id: [${animalIds.join(", ")}]
+- vaccine_id: [${vaccineIds.join(", ")}]
+
+Generate SQL insert statements for the table "vaccination_details". Each row should have:
+- vaccination_id: Auto-increment (do not include in SQL statement).
+- animal_id: Randomly pick from the animal_id list.
+- vaccination_type_id: Randomly pick from the vaccine_id list.
+- vaccination_date: Random date in the last 2 years.
+
+Add ${rowCount} entries to the vaccination_details table.
+Each entry should be added via a different INSERT INTO statement each of which is written in a single line.
+There must not be empty lines between insert statements.
+The SQL query should only include valid insert statements.
+I mean, your answer should only include a SQL query, nothing else.
+`;
+};
   
   
 
