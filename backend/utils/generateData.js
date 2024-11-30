@@ -8,10 +8,12 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
+
 // Prompt'ları saklayan nesne
 const prompts = {
     animals: `
-Provide SQL query for adding 10 entries to the table and columns specified as I specify and include only the SQL query in your response, nothing else.
+Provide SQL query for adding 5 entries to the table and columns specified as I specify and include only the SQL query in your response, nothing else.
+Each entry should be added via a different INSERT INTO query.
    Table: animals
    Columns: 
      - name (string),
@@ -47,7 +49,11 @@ const handleGenerateData = async (req, res) => {
 
     try {
         // Prompt'u seç
-        const prompt = prompts[type];
+        let prompt;
+        if (type === 'vaccinations')
+            prompt = await formatPromptForVaccinations();
+        else
+            prompt = prompts[type];
         if (!prompt) {
             return res.status(400).json({ error: "Invalid type provided." });
         }
@@ -62,15 +68,16 @@ const handleGenerateData = async (req, res) => {
         const generatedData = chatCompletion.choices[0].message.content.trim();
 
         // JSON dosyasına kaydet
-        const outputPath = path.join(__dirname, `../data/generated_${type}_data.json`);
-        fs.writeFileSync(outputPath, JSON.stringify({ data: generatedData }, null, 2));
-
+        const jsonOutputPath = path.join(__dirname, `../data/generated_${type}_data.json`);
+        const txtOutputPath = path.join(__dirname, `../data/generated_${type}_data.txt`);
+        fs.writeFileSync(jsonOutputPath, JSON.stringify({ data: generatedData }, null, 2));
+        fs.writeFileSync(txtOutputPath, generatedData);
         // Sorguyu çalıştır veya kontrol için logla
         
-        console.log(`Veri başarıyla oluşturuldu ve '${outputPath}' dosyasına kaydedildi.`);
+        console.log(`Veri başarıyla oluşturuldu ve '${jsonOutputPath}' dosyasına kaydedildi.`);
         res.status(200).json({ message: `${type} için veri başarıyla oluşturuldu.` });
 
-        await runQuery(outputPath);
+        await runQuery(jsonOutputPath);
     } catch (error) {
         console.error(`${type} için veri oluşturulurken hata oluştu:`, error);
         res.status(500).json({ error: `${type} için veri oluşturulamadı.` });
@@ -79,17 +86,31 @@ const handleGenerateData = async (req, res) => {
 
 // Sorguyu çalıştırma fonksiyonu
 const runQuery = async (filePath) => {
-   try {
-    const query = readJsonFile(filePath);
-    
-    // Sequelize ile sorguyu çalıştır
-    const result = await sequelize.query(query);
-    console.log("Sorgu başarıyla çalıştırıldı:", result);
-  } catch (error) {
-    console.error("Sorgu çalıştırılırken hata oluştu:", error);
-    throw error;
-  }
+    try {
+      const query = readJsonFile(filePath);
+  
+      console.log("Gelen sorgular:");
+      console.log(query);
+  
+      // Sorguları satırlara ayır (\n ile ayrılmış)
+      const queries = query.split("\n").filter((line) => line.trim() !== "");
+  
+      for (const singleQuery of queries) {
+        try {
+          console.log(`Çalıştırılıyor: ${singleQuery}`);
+          const result = await sequelize.query(singleQuery.trim());
+          console.log("Sorgu başarıyla çalıştırıldı:", result);
+        } catch (error) {
+          console.error(`Hata oluştu: ${singleQuery}`, error);
+        }
+      }
+      console.log("Tüm sorgular tamamlandı.");
+    } catch (error) {
+      console.error("Sorgu çalıştırılırken hata oluştu:", error);
+      throw error;
+    }
 };
+  
 
 // JSON dosyasını okuma fonksiyonu
 const readJsonFile = (filePath) => {
@@ -114,6 +135,60 @@ const formatResponse = (response) => {
     const betweenNewlines = response.slice(firstNewlineIndex + 2, lastNewlineIndex);
     return betweenNewlines.replace(/\\n/g, '\n').trim();
 };
+
+
+// animal_id'leri veri tabanından çekme fonksiyonu
+const getAnimalIds = async () => {
+    try {
+      const [animalIds] = await sequelize.query("SELECT animal_id FROM animals");
+      return animalIds.map((row) => row.animal_id); // Liste halinde dön
+    } catch (error) {
+      console.error("Animal ID'ler alınırken hata oluştu:", error);
+      throw error;
+    }
+  };
+  
+  // vaccine_id'leri veri tabanından çekme fonksiyonu
+  const getVaccineIds = async () => {
+    try {
+      const [vaccineIds] = await sequelize.query("SELECT vaccine_id FROM vaccines");
+      return vaccineIds.map((row) => row.vaccine_id); // Liste halinde dön
+    } catch (error) {
+      console.error("Vaccine ID'ler alınırken hata oluştu:", error);
+      throw error;
+    }
+  };
+
+  const formatPromptForVaccinations = async () => {
+    let animalIds = null;
+    let vaccineIds = null;
+
+    try {
+        animalIds = await getAnimalIds();
+        vaccineIds = await getVaccineIds();
+    } catch (error) {
+        console.error("error while formatting the prompt for vaccinations");
+    }    
+
+    return `
+  Using the following lists:
+  - animal_id: [${animalIds.join(", ")}]
+  - vaccine_id: [${vaccineIds.join(", ")}]
+  
+  Generate SQL insert statements for the table "vaccination_details". Each row should have:
+  - vaccination_id: Auto-increment (do not include in SQL statement).
+  - animal_id: Randomly pick from the animal_id list.
+  - vaccination_type_id: Randomly pick from the vaccine_id list.
+  - vaccination_date: Random date in the last 2 years.
+  
+  You may add multiple types of vaccinations for the same animal.
+  I want you to add as many entries to the vaccination_details as the number of animal ids.
+  The SQL query should only include valid insert statements.
+  Each entry should be added via a different INSERT INTO statement.
+  I mean, your answer should only include the SQL query.`;
+  };
+  
+  
 
 module.exports = { handleGenerateData };
 
