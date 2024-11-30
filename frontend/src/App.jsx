@@ -5,6 +5,7 @@ import { AppProvider } from "./context/AppContext";
 import RoleSelection from "./furkiComponents/RoleSelection";
 import ShelterSelection from "./furkiComponents/shelter/ShelterSelection";
 import ManagerDashboard from "./furkiComponents/shelter/ManagerDashboard";
+import AddAnimal from "./furkiComponents/AddAnimal";
 
 const App = () => {
   return (
