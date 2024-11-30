@@ -13,6 +13,7 @@ const ManagerDashboard = () => {
   const [arrivalDate, setArrivalDate] = useState(""); // Seçilen tarih
   const [expiredVaccinations, setExpiredVaccinations] = useState([]); // Aşı bilgileri
   const [selectedVaccinations, setSelectedVaccinations] = useState([]); // Seçilen aşılar
+  const [selectedAnimalVaccinations, setSelectedAnimalVaccinations] = useState(null);
 
   // Shelter'daki hayvanları yükle
   useEffect(() => {
@@ -115,6 +116,19 @@ const ManagerDashboard = () => {
         setError("Aşılar kaydedilirken bir hata oluştu.");
       });
   };
+
+  const handleVaccinationDetails = (animalId) => {
+    axiosInstance
+      .get(`/shelters/last-vaccinations/${animalId}`)
+      .then((response) => {
+        setSelectedAnimalVaccinations(response.data.vaccinations || []);
+      })
+      .catch((err) => {
+        console.error("Aşı detayları alınırken bir hata oluştu:", err);
+        setSelectedAnimalVaccinations([]);
+      });
+  };
+  
 
   const addAnimalToShelter = (animal) => {
     if (!arrivalDate) {
@@ -231,7 +245,7 @@ const ManagerDashboard = () => {
       )}
 
       {view === "shelterAnimals" && (
-        <div>
+         <div>
           <h3>Barınaktaki Hayvanlar</h3>
           {animals.length > 0 ? (
             <ul className="list">
@@ -240,16 +254,38 @@ const ManagerDashboard = () => {
                   <strong>Adı:</strong> {animal.name} <br />
                   <strong>Türü:</strong> {animal.species} <br />
                   <strong>Yaşı:</strong> {animal.age} <br />
-                  
+                  {/* Aşı Detayları Butonu */}
+                  <button
+                    onClick={() => handleVaccinationDetails(animal.animal_id)}
+                  >
+                    Aşı Detayları
+                  </button>
                 </li>
-                
               ))}
-              
             </ul>
           ) : (
             <p>Barınakta hayvan bulunmamaktadır.</p>
           )}
-        </div>
+          {/* Aşı Detayları Görüntüleme */}
+          {selectedAnimalVaccinations && (
+            <div className="vaccination-details">
+              <h4>Aşı Detayları</h4>
+              {selectedAnimalVaccinations.length > 0 ? (
+                <ul>
+                  {selectedAnimalVaccinations.map((vaccination) => (
+                    <li key={vaccination.vaccine_id}>
+                      <strong>Aşı Tipi:</strong> {vaccination.vaccine_name} <br />
+                      <strong>Son Aşı Tarihi:</strong>{" "}
+                      {vaccination.last_vaccination_date || "Hiç yapılmadı"} <br />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Aşı bilgisi bulunmamaktadır.</p>
+              )}
+            </div>
+          )}
+       </div>
       )}
 
       {view === "vaccinations" && (

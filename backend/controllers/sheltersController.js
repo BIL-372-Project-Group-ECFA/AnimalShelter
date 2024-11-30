@@ -393,6 +393,43 @@ const addVaccinations = async (req, res) => {
 };
 
 
+const getLastVaccinationsForAnimal = async (req, res) => {
+  const animal_id = req.params.animalId;
+
+  try {
+    const query = `
+      SELECT 
+        v.vaccine_id,
+        v.vaccine_name,
+        MAX(vd.vaccination_date) AS last_vaccination_date
+      FROM vaccines v
+      LEFT JOIN vaccination_details vd
+        ON v.vaccine_id = vd.vaccination_type_id
+        AND vd.animal_id = :animal_id
+      GROUP BY v.vaccine_id, v.vaccine_name;
+    `;
+
+    const [results] = await sequelize.query(query, {
+      replacements: { animal_id },
+    });
+
+    return res.status(200).json({
+      message: "Aşı bilgileri başarıyla alındı.",
+      vaccinations: results,
+    });
+  } catch (error) {
+    console.error("Aşı bilgilerini alma hatası:", error.message);
+    return res.status(500).json({
+      message: "Aşı bilgileri alınırken bir hata oluştu.",
+      error: error.message,
+    });
+  }
+};
+
+
+
+
+
 module.exports = {
   createShelter,
   getAllShelters,
@@ -404,4 +441,5 @@ module.exports = {
   addAnimalToTheShelter,
   getExpiredVaccinations,
   addVaccinations,
+  getLastVaccinationsForAnimal,
 };
