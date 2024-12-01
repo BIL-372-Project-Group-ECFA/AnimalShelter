@@ -1,0 +1,85 @@
+/* Formun kapsayıcı stilini ayarlıyoruz */
+.add-vaccine-form-container {
+  width: 50%;
+  margin: 50px auto; /* Ortalamak için */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center; /* Başlık ve form elemanlarını ortalamak için */
+}
+
+/* Başlık stilini ayarlıyoruz */
+.form-title {
+  font-size: 1.8rem;
+  color: #007bff;
+  margin-bottom: 20px; /* Başlık ile form arasında boşluk */
+}
+
+/* Form grup elemanlarının arasındaki boşlukları ayarlıyoruz */
+.add-vaccine-form .form-group {
+  margin-bottom: 15px;
+}
+
+.add-vaccine-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-align: left; /* Yazıyı sola hizala */
+}
+
+/* Input kutusunun stilini ayarlıyoruz */
+.add-vaccine-form .form-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box; /* Kenarlık dahil genişlik hesaplaması */
+}
+
+/* Buton stilini ayarlıyoruz */
+.add-vaccine-form .submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.add-vaccine-form .submit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Başarı mesajları için stil */
+.success-message {
+  color: green;
+  font-weight: bold;
+  text-align: center; /* Yatayda ortala */
+  margin-top: 20px; /* Form ile mesaj arasında boşluk */
+  margin-bottom: 10px; /* Alt eleman ile boşluk */
+  padding: 10px; /* Mesaj çevresine boşluk */
+  background-color: #e6ffe6; /* Hafif yeşil arka plan */
+  border: 1px solid #b3ffb3; /* Açık yeşil çerçeve */
+  border-radius: 5px;
+}
+
+/* Hata mesajları için stil */
+.error-message {
+  color: red;
+  font-weight: bold;
+  text-align: center; /* Yatayda ortala */
+  margin-top: 20px; /* Form ile mesaj arasında boşluk */
+  margin-bottom: 10px; /* Alt eleman ile boşluk */
+  padding: 10px; /* Mesaj çevresine boşluk */
+  background-color: #ffe6e6; /* Hafif kırmızı arka plan */
+  border: 1px solid #ffb3b3; /* Açık kırmızı çerçeve */
+  border-radius: 5px;
+}
+
+
