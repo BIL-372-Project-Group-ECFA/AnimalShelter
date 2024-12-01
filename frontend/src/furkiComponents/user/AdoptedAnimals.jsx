@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
-import axios from "axios"; // Axios ile API çağrısı yapacağız
+//import axios from "axios"; // Axios ile API çağrısı yapacağız
+import axiosInstance from "../../api/axiosInstance";
 
 const AdoptedAnimals = () => {
   const { userId } = useContext(AppContext); // User ID'yi context'ten alıyoruz
@@ -12,13 +13,17 @@ const AdoptedAnimals = () => {
     const fetchAdoptedAnimals = async () => {
       try {
         // 1. adopter_id ile adoption-history'yi sorgula
-        const adoptionHistoryResponse = await axios.get(`/adoption-history/user/${userId}`);
+        
+        const adoptionHistoryResponse = await axiosInstance.get(`/adoption-history/user/${userId}`);
         console.log(adoptionHistoryResponse.data);
-        const animalIds = adoptionHistoryResponse.data.map(adopt => adopt.animal_id);
+        const animalIds = adoptionHistoryResponse.data.currentAdoptions.map(adopt => adopt.animal_id);
         console.log(animalIds);
         // 2. animal_id ile animals'ı sorgula
-        const animalsResponse = await axios.get('/animals/getSpecificAnimals', {
-          params: { animal_ids: animalIds }
+
+        const animalIdsQueryString = animalIds.join(',');
+
+        const animalsResponse = await axiosInstance.get('/animals/getSpecificAnimals', {
+          params: { animal_ids: animalIdsQueryString }
         });
         
         console.log("-------------------")
@@ -53,7 +58,7 @@ const AdoptedAnimals = () => {
       {animals.length > 0 ? (
         <ul className="list">
           {animals.map((animal) => (
-            <li key={animal.id} className="list-item">
+            <li key={animal.animal_id} className="list-item">
               <strong>Adı:</strong> {animal.name} <br />
               <strong>Türü:</strong> {animal.species} <br />
               <strong>Yaşı:</strong> {animal.age}
