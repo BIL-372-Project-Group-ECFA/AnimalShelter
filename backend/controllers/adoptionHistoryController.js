@@ -1,4 +1,4 @@
-const { adoption_history, current_adoptions } = require('../models/init-models')(require('../utils/db').sequelize);
+const { adoption_history, current_adoptions, shelters } = require('../models/init-models')(require('../utils/db').sequelize);
 const { Op } = require('sequelize');
 
 const createAdoptionHistory = async (req, res) => {
@@ -8,6 +8,7 @@ const createAdoptionHistory = async (req, res) => {
     // Tarihi doğru formatta al
     const formattedDate = adoption_date ? adoption_date.split('.').reverse().join('-') : null;
 
+    // Adoption history kaydı oluştur
     const newAdoptionHistory = await adoption_history.create({
       shelter_id,
       adopter_id,
@@ -15,12 +16,25 @@ const createAdoptionHistory = async (req, res) => {
       adoption_date: formattedDate,
     });
 
-    return res.status(201).json({ message: 'Adoption history created successfully', adoption: newAdoptionHistory });
+    // shelters tablosundaki current_animal_count değerini 1 azalt
+    await shelters.decrement('current_animal_count', {
+      by: 1, 
+      where: { shelter_id }, 
+    });
+
+    return res.status(201).json({ 
+      message: 'Adoption history created successfully and shelter count updated', 
+      adoption: newAdoptionHistory 
+    });
   } catch (error) {
     console.error('Error creating adoption history:', error);
-    return res.status(500).json({ message: 'Error creating adoption history', error: error.message });
+    return res.status(500).json({ 
+      message: 'Error creating adoption history', 
+      error: error.message 
+    });
   }
 };
+
 
 // Tüm evlat edinme tarihlerini listele
 const getAllAdoptionHistories = async (req, res) => {
