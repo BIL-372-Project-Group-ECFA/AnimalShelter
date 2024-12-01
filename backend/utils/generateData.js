@@ -52,7 +52,7 @@ There must not be empty lines between insert statements.
    Table: animals
    Columns: 
      - name (string),
-     - species (string, e.g., "dog", "cat", "rabbit"),
+     - species (string, one of the following three: "dog", "cat", "rabbit"),
      - gender (string, "Male" or "Female"),
      - breed
      - age (integer, between 1 and 15),
@@ -114,9 +114,8 @@ const handleGenerateData = async (req, res) => {
         fs.writeFileSync(txtOutputPath, generatedData);
 
         console.log(`Veri başarıyla oluşturuldu ve '${jsonOutputPath}' dosyasına kaydedildi.`);
+        await runQuery(jsonOutputPath, type);
         res.status(200).json({ message: `${type} için veri başarıyla oluşturuldu.` });
-
-        await runQuery(jsonOutputPath);
     } catch (error) {
         console.error(`${type} için veri oluşturulurken hata oluştu:`, error);
         res.status(500).json({ error: `${type} için veri oluşturulamadı.` });
@@ -124,7 +123,7 @@ const handleGenerateData = async (req, res) => {
 };
 
 // Sorguyu çalıştırma fonksiyonu
-const runQuery = async (filePath) => {
+const runQuery = async (filePath, type) => {
     try {
       const query = readJsonFile(filePath);
   
@@ -135,9 +134,32 @@ const runQuery = async (filePath) => {
       const queries = query.split("\n").filter((line) => line.trim() !== "");
   
       for (const singleQuery of queries) {
+        let species = null;
+
+        if(type === 'animals') {
+          const match = singleQuery.match(/VALUES\s*\(([^)]+)\)/i);
+          console.log("match:", match);
+            if (match) {
+              const values = match[1].split(',').map(v => v.trim().replace(/['"]+/g, ''));
+              console.log("values: " + values);
+              species = values[1]; // species sütunu  
+              console.log("run query içi species: " + species);
+            }  
+        }      
+
         try {
           console.log(`Çalıştırılıyor: ${singleQuery}`);
+          let PhotoBlob;
+          if(type === 'animals') {
+            photoBlob = getRandomPhoto(species);
+          }  
           const result = await sequelize.query(singleQuery.trim());
+          if(type === 'animals') {
+            await sequelize.query(
+              `UPDATE animals SET photo = ? WHERE animal_id = (SELECT LAST_INSERT_ID())`,
+              { replacements: [photoBlob], type: sequelize.QueryTypes.UPDATE }
+            );
+          }
           console.log("Sorgu başarıyla çalıştırıldı:", result);
         } catch (error) {
           console.error(`Hata oluştu: ${singleQuery}`, error);
@@ -223,9 +245,28 @@ Generate SQL insert statements for the table "vaccination_details". Each row sho
 Add ${rowCount} entries to the vaccination_details table.
 Each entry should be added via a different INSERT INTO statement each of which is written in a single line.
 There must not be empty lines between insert statements.
+You may add multiple types of vaccinations for the same animal.
 The SQL query should only include valid insert statements.
 I mean, your answer should only include a SQL query, nothing else.
 `;
+};
+
+
+
+const getRandomPhoto = (species) => {
+  console.log("species: " + species);
+
+  const speciesFolderMap = {
+    cat: 'cats',
+    dog: 'dogs',
+    rabbit: 'rabbits'
+  };
+
+  const folderPath = path.join(__dirname, 'images', speciesFolderMap[species.toLowerCase()]);
+  const files = fs.readdirSync(folderPath);
+  const randomFile = files[Math.floor(Math.random() * files.length)];
+
+  return fs.readFileSync(path.join(folderPath, randomFile)); // Fotoğrafı binary (BLOB) olarak oku
 };
   
   
