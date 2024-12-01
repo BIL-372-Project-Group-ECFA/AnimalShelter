@@ -7,12 +7,18 @@
   .form-group {
     margin-bottom: 15px;
   }
+  #del-button {
+    background-color: #dc3545;
+    color: white;
+  }
   
   label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
   }
+
+
   
   select, input, button {
     
@@ -32,7 +38,7 @@
   }
   
   .adopt-button {
-    background-color: #28a745;
+    background-color: #007bff;
     color: white;
   }
   
@@ -49,11 +55,13 @@
   }
   
   .select-animal-button {
-    background-color: #ffc107;
-    color: black;
+    background-color: #007bff;
+    color: white;
     padding: 5px 10px;
     border: none;
     border-radius: 5px;
+    width: 54px;
+    height: 44px;
   }
   
   .select-animal-button.selected {
@@ -65,5 +73,17 @@
     margin-top: 20px;
     font-size: 16px;
     color: #28a745;
+  }
+
+  #foto-icon {
+    margin-left: auto; /* Pushes the icon to the right */
+    font-size: 24px; /* Increases the size of the icon */
+    background: #007bff; /* Removes background color */
+    border: none; /* Removes border */
+    cursor: pointer; /* Changes cursor to pointer */
+    display: flex; /* Aligns the icon */
+    align-items: center; /* Centers icon vertically */
+    justify-content: center; /* Ensures proper alignment */
+    color: #ffffff; /* Matches the button color theme */
   }
   

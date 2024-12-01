@@ -94,6 +94,29 @@ const AdoptedAnimals = () => {
       setSelectedAnimalPhoto(null);
     }
   };
+
+  const handleDeleteAdoption = (animalId) => {
+    axiosInstance
+      .delete(`/current-adoption/${animalId}`)
+      .then((response) => {
+        alert("Hayvan başarıyla bırakıldı.");
+        // Sahiplenilen hayvanları güncelle
+        setAnimals((prevAnimals) =>
+          prevAnimals.filter((animal) => animal.animal_id !== animalId)
+        );
+      })
+      .catch((err) => {
+        console.error("Hayvan bırakılırken bir hata oluştu:", err);
+        alert("Hayvan bırakılamadı.");
+      });
+  };
+
+
+
+
+
+
+
   // Fotoğraf modal'ını kapatmak için
   const closePhotoModal = () => {
     setSelectedAnimalPhoto(null);
@@ -132,6 +155,7 @@ const AdoptedAnimals = () => {
                     Aşı Detayları
                   </button>
               <button onClick={() => handlePhotoDetails(animal.animal_id)}>Fotoğraf Gör</button>
+              <button id="del-button" onClick={() => handleDeleteAdoption(animal.animal_id) }>Hayvanı Bırak</button>
             </li>
           ))}
         </ul>

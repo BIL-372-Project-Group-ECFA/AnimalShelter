@@ -35,7 +35,7 @@ const ShelterSelection = () => {
         <div className="shelter-list">
           {shelters.map((shelter) => (
             <div key={shelter.shelter_id} className="shelter-item">
-              <h3 className="shelter-name">{shelter.location.toLowerCase('tr').split(' ').map(word => word.charAt(0).toLocaleUpperCase('tr') + word.slice(1)).join(' ')}</h3> 
+              <h3 className="shelter-name">{shelter.location}</h3> 
               <p><strong>Barınak ID:</strong> {shelter.shelter_id}</p>
               <p><strong>Kapasite:</strong> {shelter.capacity}</p>
               <p><strong>Mevcut Hayvan Sayısı:</strong> {shelter.current_animal_count}</p>
