@@ -7,7 +7,6 @@ import ShelterSelection from "./furkiComponents/shelter/ShelterSelection";
 import ManagerDashboard from "./furkiComponents/shelter/ManagerDashboard";
 import UserEntry from "./furkiComponents/user/UserEntry";
 import UserDashboard from "./furkiComponents/user/UserDashboard";
-import AddVaccine from "./furkiComponents/AddVaccine";
 const App = () => {
   return (
     <AppProvider>
