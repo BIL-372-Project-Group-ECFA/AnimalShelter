@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { FaBuilding, FaUser, FaStethoscope } from "react-icons/fa"; // Import icons
+import { RiAdminFill } from "react-icons/ri";
 import "./RoleSelection.css"; // CSS file
 
 const RoleSelection = () => {
@@ -20,6 +21,16 @@ const RoleSelection = () => {
     <div className="role-selection-container">
       <h1>ROL SEÇİMİ</h1>
       <div className="role-cards">
+
+      <div
+          className="role-card admin-card" // Added 'admin-card' class here
+          onClick={() => handleRoleSelection("admin")}
+        >
+          <RiAdminFill className="role-icon" />
+          <h2>Veritabanı Yönetimi</h2>
+          <p>Veritabanına Ekleme İşlemleri</p>
+        </div>
+
         <div
           className="role-card"
           onClick={() => handleRoleSelection("manager")}
@@ -28,11 +39,13 @@ const RoleSelection = () => {
           <h2>Barınak Yöneticisi</h2>
           <p>Barınaktaki işlemleri yönetin ve kontrol edin.</p>
         </div>
+
         <div className="role-card" onClick={() => handleRoleSelection("user")}>
           <FaUser className="role-icon" />
           <h2>Ana Kullanıcı</h2>
           <p>Hayvanları sahiplenin ve barınakları keşfedin.</p>
         </div>
+
         <div
           className="role-card"
           onClick={() => handleRoleSelection("veterinarian")}
@@ -41,6 +54,7 @@ const RoleSelection = () => {
           <h2>Veteriner</h2>
           <p>Hayvan sağlığı ile ilgili süreçleri yönetin.</p>
         </div>
+
       </div>
     </div>
   );
