@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addAnimal } from "../api/animals";
+import { addAnimal } from "../../api/animals";
 import "./AddAnimal.css";
 
 const AddAnimal = () => {
