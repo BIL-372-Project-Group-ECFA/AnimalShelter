@@ -1,0 +1,56 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);  /* Gölgeleme */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  position: relative;
+  max-width: 60%;
+  max-height: 60%;
+  overflow: auto;
+  z-index: 1001;
+  width: 80%;
+  height: 80%;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: transparent;
+  border: none;
+  font-size: 32px;
+  color: #000;
+  cursor: pointer;
+  z-index: 1002;
+}
+
+.modal-close-button:hover {
+  color: red;
+}
+
+.modal-content {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #333;
+  word-wrap: break-word;
+}
+
+.modal-content img {
+  width: 100%;  /* Resmi modal genişliğine sığdırır */
+  height: auto;  /* Yüksekliği orantılı olarak ayarlar */
+  max-width: 100%;  /* Resmin modaldan taşmasını engeller */
+  max-height: 60vh;  /* Yüksekliği ekranın %70'ini geçmemesini sağlar */
+  object-fit: contain;  /* Resmi orantılı şekilde sığdırır */
+}

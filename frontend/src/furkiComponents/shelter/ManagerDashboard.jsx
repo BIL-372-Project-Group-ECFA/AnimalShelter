@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import axiosInstance from "../../api/axiosInstance";
+import Modal from "../Modal";
 import "./ManagerDashboard.css";
 
 
@@ -14,6 +15,9 @@ const ManagerDashboard = () => {
   const [expiredVaccinations, setExpiredVaccinations] = useState([]); // Aşı bilgileri
   const [selectedVaccinations, setSelectedVaccinations] = useState([]); // Seçilen aşılar
   const [selectedAnimalVaccinations, setSelectedAnimalVaccinations] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal açık/kapalı durumu
+  const [selectedAnimalPhoto, setSelectedAnimalPhoto] = useState(null); // Fotoğraf detayı için seçilen hayvan
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false); // Fotoğraf modal'ı açık/kapalı durumu
 
   // Shelter'daki hayvanları yükle
   useEffect(() => {
@@ -122,13 +126,67 @@ const ManagerDashboard = () => {
       .get(`/shelters/last-vaccinations/${animalId}`)
       .then((response) => {
         setSelectedAnimalVaccinations(response.data.vaccinations || []);
+        setIsModalOpen(true); // Modal'ı aç
       })
       .catch((err) => {
         console.error("Aşı detayları alınırken bir hata oluştu:", err);
         setSelectedAnimalVaccinations([]);
       });
   };
+  const closeModal = () => {
+    setIsModalOpen(false); // Modal'ı kapat
+    setSelectedAnimalVaccinations([]); // Aşı bilgilerini sıfırla
+  };
+  const bufferToBlob = (buffer) => {
+    return new Blob([new Uint8Array(buffer)], { type: 'image/jpeg' }); // İmaj türünü doğru belirlediğinizden emin olun
+  };
   
+  const convertBlobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+  
+  const handlePhotoDetails = async (animalId) => {
+    try {
+      const response = await axiosInstance.get(`/animals/${animalId}`);
+      const bufferPhoto = response.data.photo
+  
+      if (!bufferPhoto) {
+        alert("Bu hayvanın fotoğrafı bulunmamaktadır.");
+        return;
+      }
+  
+      // Buffer'ı Blob'a dönüştür
+      const photoBlob = bufferToBlob(bufferPhoto.data);
+  
+      // Blob'u Base64'e çevir
+      const base64Photo = await convertBlobToBase64(photoBlob);
+  
+      // Fotoğrafı state'e ekle ve modal'ı aç
+      setSelectedAnimalPhoto(base64Photo);
+      setIsPhotoModalOpen(true);
+    } catch (err) {
+      console.error("Fotoğraf detayları alınırken bir hata oluştu:", err);
+      alert("Fotoğraf detayları alınamadı.");
+      setSelectedAnimalPhoto(null);
+    }
+  };
+  
+  
+
+  
+  
+  
+
+  // Fotoğraf modal'ını kapatmak için
+  const closePhotoModal = () => {
+    setSelectedAnimalPhoto(null);
+    setIsPhotoModalOpen(false);
+  };
 
   const addAnimalToShelter = (animal) => {
     if (!arrivalDate) {
@@ -260,31 +318,40 @@ const ManagerDashboard = () => {
                   >
                     Aşı Detayları
                   </button>
+                  <button onClick={() => handlePhotoDetails(animal.animal_id)}>Fotoğraf Gör</button>
                 </li>
               ))}
             </ul>
           ) : (
             <p>Barınakta hayvan bulunmamaktadır.</p>
           )}
-          {/* Aşı Detayları Görüntüleme */}
-          {selectedAnimalVaccinations && (
-            <div className="vaccination-details">
-              <h4>Aşı Detayları</h4>
-              {selectedAnimalVaccinations.length > 0 ? (
-                <ul>
-                  {selectedAnimalVaccinations.map((vaccination) => (
-                    <li key={vaccination.vaccine_id}>
-                      <strong>Aşı Tipi:</strong> {vaccination.vaccine_name} <br />
-                      <strong>Son Aşı Tarihi:</strong>{" "}
-                      {vaccination.last_vaccination_date || "Hiç yapılmadı"} <br />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Aşı bilgisi bulunmamaktadır.</p>
-              )}
-            </div>
-          )}
+          <Modal isOpen={isModalOpen} onClose={closeModal} title="Aşı Detayları">
+        {selectedAnimalVaccinations && selectedAnimalVaccinations.length > 0 ? (
+          <ul>
+            {selectedAnimalVaccinations.map((vaccination) => (
+              <li key={vaccination.vaccine_id}>
+                <strong>Aşı Tipi:</strong> {vaccination.vaccine_name} <br />
+                <strong>Son Aşı Tarihi:</strong>{" "}
+                {vaccination.last_vaccination_date || "Hiç yapılmadı"}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Aşı bilgisi bulunmamaktadır.</p>
+        )}
+      </Modal>
+      <Modal isOpen={isPhotoModalOpen} onClose={closePhotoModal} title="">
+        {selectedAnimalPhoto ? (
+          <div>
+            <img
+              src={selectedAnimalPhoto || "https://via.placeholder.com/150"}
+              style={{ width: "100%", borderRadius: "8px" }}
+            />
+          </div>
+        ) : (
+          <p>Hayvan fotoğrafı bulunamadı.</p>
+        )}
+      </Modal>
        </div>
       )}
 
