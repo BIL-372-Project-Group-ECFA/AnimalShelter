@@ -27,14 +27,25 @@ const AdoptedAnimals = () => {
 
         const animalIdsQueryString = animalIds.join(',');
 
-        const animalsResponse = await axiosInstance.get('/animals/getSpecificAnimals', {
-          params: { animal_ids: animalIdsQueryString }
-        });
+        let animalsResponse = [];
+
+        if(animalIds.length > 0) {
+            animalsResponse = await axiosInstance.get('/animals/getSpecificAnimals', {
+              params: { animal_ids: animalIdsQueryString }
+            });
+        }
         
-        console.log("-------------------")
-        console.log(animalsResponse.data);
+        console.log("-------------------");
+        if(animalIds.length > 0) {
+          console.log(animalsResponse.data);
+        }
         // Sahiplenilen hayvanları state'e set et
-        setAnimals(animalsResponse.data);
+        if(animalIds.length > 0) {
+          setAnimals(animalsResponse.data);
+        }
+        else {
+          setAnimals([]);
+        }
       } catch (err) {
         setError("Hayvanlar alınırken bir hata oluştu");
         console.error(err);

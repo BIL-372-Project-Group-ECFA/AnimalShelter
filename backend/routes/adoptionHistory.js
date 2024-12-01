@@ -9,6 +9,9 @@ const {
   getCurrentAdoptionsByAdopterID,
 } = require('../controllers/adoptionHistoryController');
 
+
+router.get('/user/:adopter_id', getCurrentAdoptionsByAdopterID);
+
 // Yeni bir evlat edinme tarihi ekle
 router.post('/', createAdoptionHistory);
 
@@ -24,6 +27,6 @@ router.put('/:id', updateAdoptionHistory);
 // Evlat edinme tarihini sil
 router.delete('/:id', deleteAdoptionHistory);
 
-router.get('/user/:adopter_id', getCurrentAdoptionsByAdopterID);
+
 
 module.exports = router;

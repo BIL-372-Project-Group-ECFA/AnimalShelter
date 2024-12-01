@@ -130,9 +130,9 @@ const getAnimalsByIds = async (req, res) => {
     });
 
     // Eğer hayvanlar bulunmazsa, uygun mesaj ile dönüş yapıyoruz
-    if (animalsData.length === 0) {
+    /*if (animalsData.length === 0) {
       return res.status(404).json({ message: 'No animals found with the provided IDs' });
-    }
+    }*/
 
     return res.status(200).json(animalsData);
   } catch (error) {
