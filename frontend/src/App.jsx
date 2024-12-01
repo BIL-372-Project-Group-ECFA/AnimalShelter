@@ -17,6 +17,7 @@ import AdminDashboard from "./furkiComponents/admin/AdminDashboard";
 import AddAnimal from "./furkiComponents/admin/AddAnimal";
 import AddShelter from "./furkiComponents/admin/AddShelter";
 import AddVaccine from "./furkiComponents/admin/AddVaccine";
+import AddVet from "./furkiComponents/admin/AddVet";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
         <Route path="/admin-dashboard" element={<AddAnimal />} />
         <Route path="/admin-dashboard" element={<AddShelter />} />
         <Route path="/admin-dashboard" element={<AddVaccine />} />
+        <Route path="/admin-dashboard" element={<AddVet />} />
 
 
 

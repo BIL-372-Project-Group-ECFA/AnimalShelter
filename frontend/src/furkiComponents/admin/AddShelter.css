@@ -1,25 +1,21 @@
 /* Formun kapsayıcı stilini ayarlıyoruz */
 .add-shelter-form-container {
-  width: 60%;
-  margin: 50px auto; /* Üst ve alt boşluk ekledim, sayfa ortasında olacak */
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center; /* Başlık ve form elemanlarını ortalamak için */
+  width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+   /* Başlık ve form elemanlarını ortalamak için */
 }
 
 /* Başlık stilini ayarlıyoruz */
 .add-shelter-form-container h2 {
+  text-align: center;
   font-size: 1.8rem;
-  color: #007bff;
-  margin: 0; /* Başlık ile form arasında boşluk olmasın */
-  padding-bottom: 20px; /* Başlık ile form arasına boşluk ekledim */
-  position: absolute; /* Başlık, sayfanın üst kısmında olacak */
-  top: 0; /* Üstten sıfır uzaklık */
-  left: 50%; /* Yatayda ortalamak için */
-  transform: translateX(-50%); /* Yatayda tam ortalama için */
-  z-index: 1; /* Başlık formdan önce gelsin */
+  color: #007bff; /* Başlık formdan önce gelsin */
 }
 
 /* Form grup elemanlarının arasındaki boşlukları ayarlıyoruz */
