@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import axiosInstance from "../../api/axiosInstance";
+import Modal from "../Modal";
 import "./ManagerDashboard.css";
 
 
@@ -14,6 +15,7 @@ const ManagerDashboard = () => {
   const [expiredVaccinations, setExpiredVaccinations] = useState([]); // Aşı bilgileri
   const [selectedVaccinations, setSelectedVaccinations] = useState([]); // Seçilen aşılar
   const [selectedAnimalVaccinations, setSelectedAnimalVaccinations] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal açık/kapalı durumu
 
   // Shelter'daki hayvanları yükle
   useEffect(() => {
@@ -122,11 +124,16 @@ const ManagerDashboard = () => {
       .get(`/shelters/last-vaccinations/${animalId}`)
       .then((response) => {
         setSelectedAnimalVaccinations(response.data.vaccinations || []);
+        setIsModalOpen(true); // Modal'ı aç
       })
       .catch((err) => {
         console.error("Aşı detayları alınırken bir hata oluştu:", err);
         setSelectedAnimalVaccinations([]);
       });
+  };
+  const closeModal = () => {
+    setIsModalOpen(false); // Modal'ı kapat
+    setSelectedAnimalVaccinations([]); // Aşı bilgilerini sıfırla
   };
   
 
@@ -266,25 +273,21 @@ const ManagerDashboard = () => {
           ) : (
             <p>Barınakta hayvan bulunmamaktadır.</p>
           )}
-          {/* Aşı Detayları Görüntüleme */}
-          {selectedAnimalVaccinations && (
-            <div className="vaccination-details">
-              <h4>Aşı Detayları</h4>
-              {selectedAnimalVaccinations.length > 0 ? (
-                <ul>
-                  {selectedAnimalVaccinations.map((vaccination) => (
-                    <li key={vaccination.vaccine_id}>
-                      <strong>Aşı Tipi:</strong> {vaccination.vaccine_name} <br />
-                      <strong>Son Aşı Tarihi:</strong>{" "}
-                      {vaccination.last_vaccination_date || "Hiç yapılmadı"} <br />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Aşı bilgisi bulunmamaktadır.</p>
-              )}
-            </div>
-          )}
+          <Modal isOpen={isModalOpen} onClose={closeModal} title="Aşı Detayları">
+        {selectedAnimalVaccinations && selectedAnimalVaccinations.length > 0 ? (
+          <ul>
+            {selectedAnimalVaccinations.map((vaccination) => (
+              <li key={vaccination.vaccine_id}>
+                <strong>Aşı Tipi:</strong> {vaccination.vaccine_name} <br />
+                <strong>Son Aşı Tarihi:</strong>{" "}
+                {vaccination.last_vaccination_date || "Hiç yapılmadı"}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Aşı bilgisi bulunmamaktadır.</p>
+        )}
+      </Modal>
        </div>
       )}
 
