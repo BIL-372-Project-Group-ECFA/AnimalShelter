@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addVaccine } from '../api/vaccines';
+import { addVaccine } from '../../api/vaccines';
 import './AddVaccine.css'; // CSS dosyasını import et
 
 const AddVaccineForm = () => {

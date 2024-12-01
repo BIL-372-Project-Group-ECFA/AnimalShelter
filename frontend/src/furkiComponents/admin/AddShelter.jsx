@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addShelter } from '../api/shelters'; // API'yi import edin
+import { addShelter } from '../../api/shelters'; // API'yi import edin
 import './AddShelter.css'; // CSS dosyasını import edin
 
 const AddShelter = () => {

@@ -15,6 +15,8 @@ const RoleSelection = () => {
       navigate("/shelter-selection"); // Navigate to shelter selection
     else if(selectedRole === "user")
       navigate("/user-entry");
+    else if(selectedRole === "admin")
+      navigate("/admin-dashboard");
   };
 
   return (
