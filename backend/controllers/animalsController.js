@@ -52,7 +52,6 @@ const getAllAnimals = async (req, res) => {
 
 // Tek bir hayvanı getir
 const getAnimalById = async (req, res) => {
-  console.log("EYvah");
   try {
     const { id } = req.params;
     const animal = await animals.findByPk(id);
