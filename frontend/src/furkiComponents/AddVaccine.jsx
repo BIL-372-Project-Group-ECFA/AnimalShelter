@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { addVaccine } from '../api/vaccines';
-import '../styles/AddVaccineForm.css'; // CSS dosyasını import et
+import './AddVaccine.css'; // CSS dosyasını import et
 
 const AddVaccineForm = () => {
   const [vaccineName, setVaccineName] = useState('');
