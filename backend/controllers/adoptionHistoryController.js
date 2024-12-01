@@ -1,5 +1,5 @@
 const { adoption_history, current_adoptions } = require('../models/init-models')(require('../utils/db').sequelize);
-
+const { Op } = require('sequelize');
 
 const createAdoptionHistory = async (req, res) => {
   try {
@@ -138,7 +138,9 @@ const getCurrentAdoptionsByAdopterID = async (req, res) => {
     // Şimdi, bu adoption_id'leri kullanarak current_adoptions tablosunda sorgulama yapıyoruz
     const currentAdoptions = await current_adoptions.findAll({
       where: {
-        adoption_id: adoptionIds,  // adoption_history'den alınan adoption_id'leri ile eşleşen current_adoptions satırları
+        adoption_id: {
+          [Op.in]: adoptionIds, // adoptionIds array'inde bulunan adoption_id'leri ile eşleşen satırları bulur
+        },
       },
     });
 

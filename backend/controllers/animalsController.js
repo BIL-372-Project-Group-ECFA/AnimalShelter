@@ -1,5 +1,6 @@
 const multer = require('multer');
 const { animals } = require('../models/init-models')(require('../utils/db').sequelize);
+const { Op } = require('sequelize');
 
 // Fotoğrafları bellekte tutacak multer yapılandırması
 const storage = multer.memoryStorage();
@@ -120,10 +121,13 @@ const getAnimalsByIds = async (req, res) => {
     const animalIdsArray = animal_ids.split(',').map(id => parseInt(id, 10));
 
     // Animal ID'leri ile sorgulama yapıyoruz
+    
     const animalsData = await animals.findAll({
       where: {
-        id: animalIdsArray  // animalIdsArray, sorgu yapılacak id'leri içeriyor
-      }
+        animal_id: {
+          [Op.in]: animalIdsArray, // adoptionIds array'inde bulunan adoption_id'leri ile eşleşen satırları bulur
+        },
+      },
     });
 
     // Eğer hayvanlar bulunmazsa, uygun mesaj ile dönüş yapıyoruz
