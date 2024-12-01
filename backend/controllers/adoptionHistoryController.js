@@ -142,9 +142,9 @@ const getCurrentAdoptionsByAdopterID = async (req, res) => {
     });
 
     // Eğer adoption_history tablosunda eşleşen kayıt bulunmazsa, 404 döndürüyoruz
-    if (adoptionHistories.length === 0) {
+    /*if (adoptionHistories.length === 0) {
       return res.status(404).json({ message: 'No adoption history found for this adopter_id' });
-    }
+    }*/
 
     // adoption_id'leri çıkartıyoruz
     const adoptionIds = adoptionHistories.map(history => history.adoption_id);
@@ -159,9 +159,9 @@ const getCurrentAdoptionsByAdopterID = async (req, res) => {
     });
 
     // current_adoptions tablosunda eşleşen veri bulunmazsa, 404 döndürüyoruz
-    if (currentAdoptions.length === 0) {
+    /*if (currentAdoptions.length === 0) {
       return res.status(404).json({ message: 'No current adoption found for the provided adoption_id' });
-    }
+    }*/
 
     // Her iki tablodan gelen verileri birleştirip döndürüyoruz
     return res.status(200).json({

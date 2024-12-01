@@ -51,9 +51,9 @@ const getDonationsByDonorId = async (req, res) => {
       ],
     });
 
-    if (!donationData.length) {
+    /*if (!donationData.length) {
       return res.status(404).json({ message: "No donations found for this donor." });
-    }
+    }*/
 
     return res.status(200).json(donationData);
   } catch (error) {
