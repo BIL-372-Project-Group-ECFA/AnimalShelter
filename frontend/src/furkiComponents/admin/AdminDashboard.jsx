@@ -4,6 +4,7 @@ import { AppContext } from "../../context/AppContext";
 import AddAnimal from "./AddAnimal";
 import AddShelter from "./AddShelter";
 import AddVaccine from "./AddVaccine";
+import AddVet from "./AddVet";
 
 import "./AdminDashboard.css";
 
@@ -16,6 +17,8 @@ const AdminDashboard = () => {
                 return <AddShelter />;
             case "addVaccine":
                 return <AddVaccine />;
+            case "addVet":
+                return <AddVet />;
             default:
                 return <AddAnimal />;
         }
@@ -45,6 +48,15 @@ const AdminDashboard = () => {
                 >
                     Aşı Ekle
                 </button>
+
+                <button
+                    className={`tab-button ${activeView === "addVet" ? "active" : ""}`}
+                    onClick={() => setActiveView("addVet")}
+                >
+                    Veteriner Ekle
+                </button>
+
+                
             </div>
             {renderView()}
         </div>

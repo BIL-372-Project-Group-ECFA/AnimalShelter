@@ -34,7 +34,7 @@ const AddShelter = () => {
 
   return (
     <div className="add-shelter-form-container">
-      <h2 className="form-title">Yeni Barınak Ekle</h2>
+      <h2>Yeni Barınak Ekle</h2>
       <form className="add-shelter-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="location">Location:</label>
