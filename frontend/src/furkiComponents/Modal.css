@@ -24,14 +24,13 @@
   height: 80%;
 }
 
-.modal-close-button {
+.modal-close {
   position: absolute;
   top: 20px;
   right: 20px;
-  background-color: transparent;
   border: none;
   font-size: 32px;
-  color: #000;
+  color: #ffffff;
   cursor: pointer;
   z-index: 1002;
 }
