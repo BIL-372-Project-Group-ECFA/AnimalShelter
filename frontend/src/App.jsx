@@ -19,12 +19,22 @@ import AddShelter from "./furkiComponents/admin/AddShelter";
 import AddVaccine from "./furkiComponents/admin/AddVaccine";
 import AddVet from "./furkiComponents/admin/AddVet";
 
+import ShelterSelectionVet from "./furkiComponents/vet/ShelterSelectionVet";
+import ManagerDashboardVet from "./furkiComponents/vet/ManagerDashboardVet";
+
+
+
+import CreateMedicalRecord from "./furkiComponents/vet/CreateMedicalRecord";
+import MedicalRecordDetails from "./furkiComponents/vet/MedicalRecordDetails";
+
+
 const App = () => {
   return (
     <AppProvider>
       {/* Sadece Routes ile rota tanımlamaları yapılır */}
       <Routes>
         <Route path="/" element={<RoleSelection />} />
+        
         <Route path="/shelter-selection" element={<ShelterSelection />} />
         <Route path="/manager-dashboard" element={<ManagerDashboard />} />
 
@@ -41,7 +51,12 @@ const App = () => {
         <Route path="/admin-dashboard" element={<AddVaccine />} />
         <Route path="/admin-dashboard" element={<AddVet />} />
 
+        <Route path="/veterinarian-dashboard-shelter" element={<ShelterSelectionVet />} />
+        <Route path="/veterinarian-dashboard" element={<ManagerDashboardVet />} />
 
+
+        <Route path="/veterinarian-dashboard" element={<CreateMedicalRecord />} />
+        <Route path="/veterinarian-dashboard" element={<MedicalRecordDetails />} />
 
         {/* Diğer roller için rotalar eklenebilir */}
       </Routes>

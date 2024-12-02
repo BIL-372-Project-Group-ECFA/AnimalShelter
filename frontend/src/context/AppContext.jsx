@@ -8,7 +8,7 @@ export const AppProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
 
   return (
-    <AppContext.Provider value={{ role, setRole, selectedShelter, setSelectedShelter, userId, setUserId }}>
+    <AppContext.Provider value={{role, setRole, selectedShelter, setSelectedShelter, userId, setUserId }}>
       {children}
     </AppContext.Provider>
   );

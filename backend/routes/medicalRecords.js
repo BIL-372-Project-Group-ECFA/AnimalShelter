@@ -5,7 +5,8 @@ const {
   getAllMedicalRecords,
   getMedicalRecordById,
   updateMedicalRecord,
-  deleteMedicalRecord
+  deleteMedicalRecord,
+  getMedicalRecordsByAnimalId,
 } = require('../controllers/medicalRecordsController');
 
 // Yeni bir medikal kayıt ekle
@@ -22,5 +23,8 @@ router.put('/:record_id', updateMedicalRecord);
 
 // Medikal kaydını sil
 router.delete('/:record_id', deleteMedicalRecord);
+
+router.get('/:animal_id/medical-records', getMedicalRecordsByAnimalId);
+
 
 module.exports = router;

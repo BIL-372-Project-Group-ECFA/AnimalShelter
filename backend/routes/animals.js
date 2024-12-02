@@ -27,5 +27,4 @@ router.put('/:id', updateAnimal);
 router.delete('/:id', deleteAnimal);
 
 
-
 module.exports = router;

@@ -17,6 +17,8 @@ const RoleSelection = () => {
       navigate("/user-entry");
     else if(selectedRole === "admin")
       navigate("/admin-dashboard");
+    else if(selectedRole === "veterinarian")
+      navigate("/veterinarian-dashboard-shelter");
   };
 
   return (

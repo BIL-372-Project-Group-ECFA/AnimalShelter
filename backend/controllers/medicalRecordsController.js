@@ -44,7 +44,7 @@ const getAllMedicalRecords = async (req, res) => {
         {
           model: veterinarians,
           as: 'veterinarian',
-          attributes: ['name', 'specialty']
+          attributes: ['contact_number', 'license_number','specialization']
         }
       ]
     });
@@ -70,7 +70,7 @@ const getMedicalRecordById = async (req, res) => {
         {
           model: veterinarians,
           as: 'veterinarian',
-          attributes: ['name', 'specialty']
+          attributes: ['contact_number', 'license_number','specialization']
         }
       ]
     });
@@ -137,10 +137,33 @@ const deleteMedicalRecord = async (req, res) => {
   }
 };
 
+const getMedicalRecordsByAnimalId = async (req, res) => {
+  try {
+    const { animal_id } = req.params;
+
+    // medical_records tablosunda ilgili animal_id ile eşleşen kayıtları bul
+    const records = await medical_records.findAll({
+      where: {
+        animal_id, // Şart: animal_id eşleşmesi
+      },
+    });
+
+    if (records.length === 0) {
+      return res.status(404).json({ message: 'No medical records found for this animal.' });
+    }
+
+    return res.status(200).json(records); // Kayıtları döndür
+  } catch (error) {
+    console.error('Error fetching medical records:', error);
+    return res.status(500).json({ message: 'An error occurred while fetching medical records.' });
+  }
+};
+
 module.exports = {
   createMedicalRecord,
   getAllMedicalRecords,
   getMedicalRecordById,
   updateMedicalRecord,
-  deleteMedicalRecord
+  deleteMedicalRecord,
+  getMedicalRecordsByAnimalId
 };
